@@ -2,7 +2,6 @@ package com.example;
 
 import java.util.EnumSet;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.ExtendedState;
@@ -190,12 +189,10 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
             ;
     }
 
-    @Bean
     public Action<OrderState, OrderEvent> receivePayment() {
         return context -> setPaid(context.getExtendedState());
     }
 
-    @Bean
     public Action<OrderState, OrderEvent> refundPayment() {
         return context -> setUnpaid(context.getExtendedState());
     }
