@@ -16,7 +16,7 @@ import com.example.OrderStateMachineConfiguration.OrderState;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes=OrderApplication.class)
-public class OrderStatusTest {
+public class OrderStateMachineTest {
 
     @Autowired
     StateMachineFactory<OrderState, OrderEvent> orderStateFactory;
@@ -27,14 +27,18 @@ public class OrderStatusTest {
         StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateFactory.getStateMachine();
 
         orderStateMachine.start();
+        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isFalse();
         assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
+        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isTrue();
         assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
         assertTrue(orderStateMachine.sendEvent(OrderEvent.Refund));
+        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isFalse();
         assertTrue(orderStateMachine.sendEvent(OrderEvent.Reopen));
         assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
         assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
 
         assertThat(orderStateMachine.getState().getIds()).containsOnly(OrderState.Completed);
+        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isTrue();
     }
 
     @Test
@@ -43,10 +47,13 @@ public class OrderStatusTest {
         StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateFactory.getStateMachine();
 
         orderStateMachine.start();
+        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isFalse();
         assertTrue(orderStateMachine.sendEvent(OrderEvent.UnlockDelivery));
         assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
         assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
+        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isTrue();
         assertTrue(orderStateMachine.sendEvent(OrderEvent.Refund));
+        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isFalse();
         assertTrue(orderStateMachine.sendEvent(OrderEvent.Reopen));
         assertTrue(orderStateMachine.sendEvent(OrderEvent.UnlockDelivery));
         assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
