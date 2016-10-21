@@ -1,6 +1,7 @@
 package com.example;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,13 +25,14 @@ public class OrderStatusTest {
     public void doPrepaymentFlow() {
         System.out.println("pre-payment flow");
         StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateFactory.getStateMachine();
+
         orderStateMachine.start();
-        orderStateMachine.sendEvent(OrderEvent.ReceivePayment);
-        orderStateMachine.sendEvent(OrderEvent.Deliver);
-        orderStateMachine.sendEvent(OrderEvent.Refund);
-        orderStateMachine.sendEvent(OrderEvent.Reopen);
-        orderStateMachine.sendEvent(OrderEvent.ReceivePayment);
-        orderStateMachine.sendEvent(OrderEvent.Deliver);
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.Refund));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.Reopen));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
 
         assertThat(orderStateMachine.getState().getIds()).containsOnly(OrderState.Completed);
     }
@@ -39,15 +41,17 @@ public class OrderStatusTest {
     public void doPostpaymentFlow() {
         System.out.println("post-payment flow");
         StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateFactory.getStateMachine();
+
         orderStateMachine.start();
-        orderStateMachine.sendEvent(OrderEvent.UnlockDelivery);
-        orderStateMachine.sendEvent(OrderEvent.Deliver);
-        orderStateMachine.sendEvent(OrderEvent.ReceivePayment);
-        orderStateMachine.sendEvent(OrderEvent.Refund);
-        orderStateMachine.sendEvent(OrderEvent.Reopen);
-        orderStateMachine.sendEvent(OrderEvent.UnlockDelivery);
-        orderStateMachine.sendEvent(OrderEvent.ReceivePayment);
-        orderStateMachine.sendEvent(OrderEvent.Deliver);
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.UnlockDelivery));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.Refund));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.Reopen));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.UnlockDelivery));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
+        assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
+
         assertThat(orderStateMachine.getState().getIds()).containsOnly(OrderState.Completed);
     }
 }
