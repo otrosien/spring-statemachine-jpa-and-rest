@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: statemachine-sample
+  output:
+    ansi:
+      enabled: ALWAYS
+
+logging:
+  level:
+    root: 'INFO'
