@@ -28,15 +28,15 @@ repositories {
 dependencies {
 
     compile('org.springframework.boot:spring-boot-starter')
-//    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-//    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-web')
     runtime('org.springframework.boot:spring-boot-starter-logging')
     testCompile('org.springframework.boot:spring-boot-starter-test')
-//    runtime("com.h2database:h2")
+    runtime("com.h2database:h2")
 
 //    // REST
-//    runtime('org.springframework.data:spring-data-rest-hal-browser')
-//    compile("org.springframework.boot:spring-boot-starter-data-rest")
+    runtime('org.springframework.data:spring-data-rest-hal-browser')
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile 'junit:junit:4.12'
