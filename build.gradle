@@ -44,7 +44,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     '1.2.0.M2'.with { springStatemachineVersion ->
         compile("org.springframework.statemachine:spring-statemachine-core:$springStatemachineVersion")
-//        compile("org.springframework.statemachine:spring-statemachine-kryo:$springStatemachineVersion")
+        compile("org.springframework.statemachine:spring-statemachine-kryo:$springStatemachineVersion")
+        testCompile("org.springframework.statemachine:spring-statemachine-test:$springStatemachineVersion")
     }
     compileOnly('org.projectlombok:lombok:1.16.10')
 }

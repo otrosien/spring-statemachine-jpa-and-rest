@@ -1,64 +1,130 @@
 package com.example;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.statemachine.test.AbstractStateMachineTests;
+import org.springframework.statemachine.test.StateMachineTestPlan;
+import org.springframework.statemachine.test.StateMachineTestPlanBuilder;
 
 import com.example.OrderStateMachineConfiguration.OrderEvent;
 import com.example.OrderStateMachineConfiguration.OrderState;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes=OrderApplication.class)
-public class OrderStateMachineTest {
+import lombok.SneakyThrows;
 
-    @Autowired
+public class OrderStateMachineTest extends AbstractStateMachineTests {
+
     StateMachineFactory<OrderState, OrderEvent> orderStateFactory;
 
-    @Test
-    public void doPrepaymentFlow() {
-        System.out.println("pre-payment flow");
-        StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateFactory.getStateMachine();
-
-        orderStateMachine.start();
-        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isFalse();
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
-        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isTrue();
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.Refund));
-        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isFalse();
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.Reopen));
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
-
-        assertThat(orderStateMachine.getState().getIds()).containsOnly(OrderState.Completed);
-        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isTrue();
+    @Override
+    protected AnnotationConfigApplicationContext buildContext() {
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(OrderStateMachineConfiguration.class);
+        orderStateFactory = ctx.getBean(StateMachineFactory.class);
+        return ctx;
     }
 
     @Test
-    public void doPostpaymentFlow() {
-        System.out.println("post-payment flow");
+    @SneakyThrows
+    public void testPrepaymentFlow() {
         StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateFactory.getStateMachine();
+        StateMachineTestPlan<OrderState, OrderEvent> plan =
+                StateMachineTestPlanBuilder.<OrderState, OrderEvent>builder()
+                    .stateMachine(orderStateMachine)
+                    .step()
+                        .expectState(OrderState.Open)
+                        .expectVariable("paid", Boolean.FALSE)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.ReceivePayment)
+                        .expectState(OrderState.ReadyForDelivery)
+                        .expectExtendedStateChanged(1)
+                        .expectVariable("paid", Boolean.TRUE)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.Deliver)
+                        .expectState(OrderState.Completed)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.ReceivePayment)
+                        .expectEventNotAccepted(1)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.Refund)
+                        .expectState(OrderState.Canceled)
+                        .expectExtendedStateChanged(1)
+                        .expectVariable("paid", Boolean.FALSE)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.Reopen)
+                        .expectState(OrderState.Open)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.ReceivePayment)
+                        .expectState(OrderState.ReadyForDelivery)
+                        .expectExtendedStateChanged(1)
+                        .expectVariable("paid", Boolean.TRUE)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.Deliver)
+                        .expectState(OrderState.Completed)
+                        .and()
+                    .build();
 
-        orderStateMachine.start();
-        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isFalse();
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.UnlockDelivery));
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
-        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isTrue();
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.Refund));
-        assertThat(orderStateMachine.getExtendedState().get("paid", Boolean.class)).isFalse();
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.Reopen));
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.UnlockDelivery));
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.ReceivePayment));
-        assertTrue(orderStateMachine.sendEvent(OrderEvent.Deliver));
+        plan.test();
 
-        assertThat(orderStateMachine.getState().getIds()).containsOnly(OrderState.Completed);
+    }
+
+    @Test
+    @SneakyThrows
+    public void testPostpaymentFlow() {
+        StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateFactory.getStateMachine();
+        StateMachineTestPlan<OrderState, OrderEvent> plan =
+                StateMachineTestPlanBuilder.<OrderState, OrderEvent>builder()
+                    .stateMachine(orderStateMachine)
+                    .step()
+                        .expectState(OrderState.Open)
+                        .expectVariable("paid", Boolean.FALSE)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.UnlockDelivery)
+                        .expectState(OrderState.ReadyForDelivery)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.Deliver)
+                        .expectState(OrderState.AwaitingPayment)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.ReceivePayment)
+                        .expectState(OrderState.Completed)
+                        .expectExtendedStateChanged(1)
+                        .expectVariable("paid", Boolean.TRUE)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.Refund)
+                        .expectState(OrderState.Canceled)
+                        .expectExtendedStateChanged(1)
+                        .expectVariable("paid", Boolean.FALSE)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.Reopen)
+                        .expectState(OrderState.Open)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.UnlockDelivery)
+                        .expectState(OrderState.ReadyForDelivery)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.ReceivePayment)
+                        .expectStateChanged(0)
+                        .expectExtendedStateChanged(1)
+                        .expectVariable("paid", Boolean.TRUE)
+                        .and()
+                    .step()
+                        .sendEvent(OrderEvent.Deliver)
+                        .expectState(OrderState.Completed)
+                        .and()
+                    .build();
+        plan.test();
     }
 }

@@ -4,6 +4,11 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
+  datasource:
+    platform: h2
+    url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false"
+    username: sa
+    password:
 
 logging:
   level:

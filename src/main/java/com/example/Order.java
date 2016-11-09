@@ -2,14 +2,14 @@ package com.example;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.UUID;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import com.example.OrderStateMachineConfiguration.OrderState;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,6 +28,6 @@ public class Order extends AbstractPersistable<Long> {
     @GeneratedValue(strategy=IDENTITY)
     Long id;
 
-    OrderState orderState;
+    UUID orderStateMachine;
 
 }
