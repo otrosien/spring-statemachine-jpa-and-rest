@@ -4,10 +4,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
+
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.statemachine.StateMachineContext;
-import org.springframework.statemachine.StateMachineContextRepository;
 import org.springframework.statemachine.kryo.MessageHeadersSerializer;
 import org.springframework.statemachine.kryo.StateMachineContextSerializer;
 import org.springframework.statemachine.kryo.UUIDSerializer;
@@ -16,13 +17,15 @@ import org.springframework.stereotype.Component;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.example.OrderStateMachineConfiguration.OrderEvent;
+import com.example.OrderStateMachineConfiguration.OrderState;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 
 @Component
 @RequiredArgsConstructor
-public class JpaStateMachineContextRepository<S, E> implements StateMachineContextRepository<S, E, StateMachineContext<S, E>> {
+@Converter(autoApply=true)
+public class OrderStateMachineAttributeConverter implements AttributeConverter<StateMachineContext<OrderState, OrderEvent>, byte[]> {
 
     private static final ThreadLocal<Kryo> kryoThreadLocal = new ThreadLocal<Kryo>() {
 
@@ -37,21 +40,19 @@ public class JpaStateMachineContextRepository<S, E> implements StateMachineConte
         }
     };
 
-    private final JdbcTemplate jdbcTemplate;
-
     @Override
-    public void save(StateMachineContext<S, E> context, String id) {
-        jdbcTemplate.update("REPLACE INTO STATE_MACHINE (id, state) VALUES (?, ?)", serialize(context), id);
+    public byte[] convertToDatabaseColumn(StateMachineContext<OrderState, OrderEvent> attribute) {
+        if(attribute == null) return null;
+        return serialize(attribute);
     }
 
     @Override
-    @SneakyThrows
-    public StateMachineContext<S, E> getContext(String id) {
-        return jdbcTemplate.queryForObject("select id, state from STATE_MACHINE where id=?", new Object[] {id},
-                (resultSet, rowNum) -> deserialize(resultSet.getBytes("state")));
+    public StateMachineContext<OrderState, OrderEvent> convertToEntityAttribute(byte[] dbData) {
+        if (dbData == null) return null;
+        return deserialize(dbData);
     }
 
-    private byte[] serialize(StateMachineContext<S, E> context) {
+    private byte[] serialize(StateMachineContext<OrderState, OrderEvent> context) {
         Kryo kryo = kryoThreadLocal.get();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Output output = new Output(out);
@@ -61,7 +62,7 @@ public class JpaStateMachineContextRepository<S, E> implements StateMachineConte
     }
 
     @SuppressWarnings("unchecked")
-    private StateMachineContext<S, E> deserialize(byte[] data) {
+    private StateMachineContext<OrderState, OrderEvent> deserialize(byte[] data) {
         if (data == null || data.length == 0) {
             return null;
         }

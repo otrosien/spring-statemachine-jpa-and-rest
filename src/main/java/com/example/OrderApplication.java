@@ -1,52 +1,45 @@
 package com.example;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.statemachine.StateMachineContext;
 import org.springframework.statemachine.StateMachinePersist;
+import org.springframework.statemachine.persist.DefaultStateMachinePersister;
+import org.springframework.statemachine.persist.StateMachinePersister;
 
 import com.example.OrderStateMachineConfiguration.OrderEvent;
 import com.example.OrderStateMachineConfiguration.OrderState;
 
-import lombok.RequiredArgsConstructor;
-
 @SpringBootApplication
+@EntityScan
 class OrderApplication {
 
     public static void main(String[] args) {
         new SpringApplicationBuilder(OrderApplication.class).build().run(args);
     }
 
-    @Configuration
-    static class StateMachinePersistenceConfig {
-
-        @Bean
-        public JpaStateMachineContextRepository<OrderState, OrderEvent> stateMachineRepo(JdbcTemplate jdbcTemplate) {
-            return new JpaStateMachineContextRepository<>(jdbcTemplate);
-        }
-
-        @Bean
-        public StateMachinePersist<OrderState, OrderEvent, String> stateMachinePersist(JpaStateMachineContextRepository<OrderState, OrderEvent> stateMachineRepo) {
-            return new JdbcStateMachinePersist(stateMachineRepo);
-        }
+    @Bean
+    public StateMachinePersister<OrderState, OrderEvent, Long> persister(StateMachinePersist<OrderState, OrderEvent, Long> persist) {
+        return new DefaultStateMachinePersister<>(persist);
     }
 
-    @RequiredArgsConstructor
-    static class JdbcStateMachinePersist implements StateMachinePersist<OrderState, OrderEvent, String> {
-        private final JpaStateMachineContextRepository<OrderState, OrderEvent> repo;
+    @Bean
+    public StateMachinePersist<OrderState, OrderEvent, Long> persist(OrderRepository repo) {
+        return new StateMachinePersist<OrderState, OrderEvent, Long>() {
 
-        @Override
-        public void write(StateMachineContext<OrderState, OrderEvent> context, String contextObj) throws Exception {
-            repo.save(context, context.getId());
-        }
+            @Override
+            public StateMachineContext<OrderState, OrderEvent> read(Long contextObj) throws Exception {
+                return repo.getOne(contextObj).getStateMachineContext();
+            }
 
-        @Override
-        public StateMachineContext<OrderState, OrderEvent> read(String contextObj) throws Exception {
-            return repo.getContext(contextObj);
-        }
+            @Override
+            public void write(StateMachineContext<OrderState, OrderEvent> context, Long contextObj) throws Exception {
+                Order o = repo.getOne(contextObj);
+                o.setStateMachineContext(context);
+                repo.save(o);
+            }
+        };
     }
-
 }

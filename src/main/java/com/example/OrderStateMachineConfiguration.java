@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
-@EnableStateMachineFactory
+@EnableStateMachineFactory(contextEvents=false)
 class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<OrderState, OrderEvent> {
 
     /**
