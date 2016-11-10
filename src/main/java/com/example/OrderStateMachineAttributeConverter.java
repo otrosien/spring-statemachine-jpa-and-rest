@@ -42,17 +42,18 @@ public class OrderStateMachineAttributeConverter implements AttributeConverter<S
 
     @Override
     public byte[] convertToDatabaseColumn(StateMachineContext<OrderState, OrderEvent> attribute) {
-        if(attribute == null) return null;
         return serialize(attribute);
     }
 
     @Override
     public StateMachineContext<OrderState, OrderEvent> convertToEntityAttribute(byte[] dbData) {
-        if (dbData == null) return null;
         return deserialize(dbData);
     }
 
     private byte[] serialize(StateMachineContext<OrderState, OrderEvent> context) {
+        if(context == null) {
+            return null;
+        }
         Kryo kryo = kryoThreadLocal.get();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Output output = new Output(out);
