@@ -70,6 +70,9 @@ the StateMachineContext in a binary-serialized form, using Kryo.
 The REST API exposes links for receiving events to trigger state transitions for
 the state machine. The server either responds with `202 Accepted` if an event was accepted,
 or `422 Unprocessable Entity` if the event was not accepted by the state machine.
+The resource intentionally does not expose the current state, but links for triggering
+the state transitions that are possible for the given state.
+
 
 ```
 {
