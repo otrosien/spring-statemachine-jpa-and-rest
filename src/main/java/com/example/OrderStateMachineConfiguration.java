@@ -82,7 +82,7 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
         Canceled
     }
 
-    public static enum OrderEvent {
+    public enum OrderEvent {
         UnlockDelivery,
         ReceivePayment,
         Refund,

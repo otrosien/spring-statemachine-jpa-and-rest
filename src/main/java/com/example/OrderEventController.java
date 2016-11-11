@@ -22,7 +22,7 @@ import lombok.SneakyThrows;
 @RequiredArgsConstructor
 public class OrderEventController {
 
-    final StateMachineFactory<OrderState, OrderEvent> orderStateFactory;
+    final StateMachineFactory<OrderState, OrderEvent> stateMachineFactory;
 
     final StateMachinePersister<OrderState, OrderEvent, Order> persister;
 
@@ -30,7 +30,7 @@ public class OrderEventController {
     @SneakyThrows
     @Transactional
     public HttpEntity<Void> receiveEvent(@PathVariable("id") Order order, @PathVariable("event") OrderEvent event) {
-        StateMachine<OrderState, OrderEvent> stateMachine = orderStateFactory.getStateMachine();
+        StateMachine<OrderState, OrderEvent> stateMachine = stateMachineFactory.getStateMachine();
         persister.restore(stateMachine, order);
         if (stateMachine.sendEvent(event)) {
             persister.persist(stateMachine, order);

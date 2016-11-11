@@ -21,7 +21,7 @@ import lombok.SneakyThrows;
 @RequiredArgsConstructor
 public class OrderEventResourceProcessor implements ResourceProcessor<Resource<Order>> {
 
-    final StateMachineFactory<OrderState, OrderEvent> orderStateFactory;
+    final StateMachineFactory<OrderState, OrderEvent> stateMachineFactory;
 
     final StateMachinePersister<OrderState, OrderEvent, Order> persister;
 
@@ -30,7 +30,7 @@ public class OrderEventResourceProcessor implements ResourceProcessor<Resource<O
     @Override
     @SneakyThrows
     public Resource<Order> process(Resource<Order> resource) {
-        StateMachine<OrderState, OrderEvent> stateMachine = orderStateFactory.getStateMachine();
+        StateMachine<OrderState, OrderEvent> stateMachine = stateMachineFactory.getStateMachine();
         Order order = resource.getContent();
         persister.restore(stateMachine, order);
         boolean paid = new PaidPredicate().test(stateMachine);
@@ -40,31 +40,28 @@ public class OrderEventResourceProcessor implements ResourceProcessor<Resource<O
             if(!paid) {
                 resource.add(eventLink(order, OrderEvent.ReceivePayment, "receive-payment")); // (1)
             }
-            resource.add(eventLink(order, OrderEvent.Cancel, "cancel"));                  // (6)
-            resource.add(eventLink(order, OrderEvent.UnlockDelivery, "unlock-delivery")); // (7)
+            resource.add(eventLink(order, OrderEvent.Cancel, "cancel"));                      // (6)
+            resource.add(eventLink(order, OrderEvent.UnlockDelivery, "unlock-delivery"));     // (7)
             break;
         case ReadyForDelivery:
-            if(!paid) {
-                resource.add(eventLink(order, OrderEvent.ReceivePayment, "receive-payment")); // (11)
-            }
-            resource.add(eventLink(order, OrderEvent.Deliver, "deliver"));                // (2/9)
+            resource.add(eventLink(order, OrderEvent.Deliver, "deliver"));                    // (2/9)
             if(paid) {
-                resource.add(eventLink(order, OrderEvent.Refund, "refund"));              // (4)
-            }
-            if(!paid) {
-                resource.add(eventLink(order, OrderEvent.Cancel, "cancel"));              // (8)
+                resource.add(eventLink(order, OrderEvent.Refund, "refund"));                  // (4)
+            } else {
+                resource.add(eventLink(order, OrderEvent.Cancel, "cancel"));                  // (8)
+                resource.add(eventLink(order, OrderEvent.ReceivePayment, "receive-payment")); // (11)
             }
             break;
         case AwaitingPayment:
-            resource.add(eventLink(order, OrderEvent.ReceivePayment, "receive-payment")); // (10)
+            resource.add(eventLink(order, OrderEvent.ReceivePayment, "receive-payment"));     // (10)
             break;
         case Completed:
-                if(paid) {
-                    resource.add(eventLink(order, OrderEvent.Refund, "refund"));          // (3)
-                }
+            if(paid) {
+                resource.add(eventLink(order, OrderEvent.Refund, "refund"));                  // (3)
+            }
             break;
         case Canceled:
-            resource.add(eventLink(order, OrderEvent.Reopen, "reopen"));                  // (5)
+            resource.add(eventLink(order, OrderEvent.Reopen, "reopen"));                      // (5)
             if(!paid) {
                 resource.add(eventLink(order, OrderEvent.ReceivePayment, "receive-payment")); // (12)
             }
