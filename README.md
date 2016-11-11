@@ -1,7 +1,7 @@
 [ ![Build Status](https://travis-ci.org/otrosien/spring-statemachine-jpa.svg)](https://travis-ci.org/otrosien/spring-statemachine-jpa)
 
 
-# Spring Statemachine using JPA
+# Spring Statemachine using JPA and REST
 
 This is just a sample project trying out the combination of Spring-Statemachine,
 JPA and Spring Data REST.
@@ -9,7 +9,7 @@ JPA and Spring Data REST.
 ## The State Machine
 
 The state machine is a simulation of an order fulfillment process, offering two different flows: One for pay-before-shipping
-(prepayment, paypal etc.), and one for ship-before-payment (cash-on-delivery, invoice).
+(prepayment, paypal etc.), and one for ship-before-payment (cash-on-delivery, invoice). Ultimately they form one state machine. Some transitions have guards depending on the "paid" status of the order, which gets set when the "ReceivePayment" event occurs (and un-set on "Refund"). Other than that, the state machine is pretty straight-forward.
 
 The two flows are shown below.
 
