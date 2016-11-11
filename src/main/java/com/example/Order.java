@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.springframework.hateoas.Identifiable;
 import org.springframework.statemachine.StateMachineContext;
 
 import com.example.OrderStateMachineConfiguration.OrderEvent;
@@ -23,7 +24,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level=AccessLevel.PRIVATE)
 @Access(AccessType.FIELD)
 @Table(name="orders")
-public class Order extends AbstractPersistable<Long> {
+public class Order extends AbstractPersistable<Long> implements Identifiable<Long> {
 
     private static final long serialVersionUID = 8848887579564649636L;
 

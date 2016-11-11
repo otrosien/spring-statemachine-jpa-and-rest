@@ -1,85 +1,78 @@
 package com.example;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.net.URI;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
 import lombok.SneakyThrows;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= {OrderApplication.class})
+@SpringBootTest(classes= {OrderApplication.class}, webEnvironment = WebEnvironment.RANDOM_PORT, properties = {
+        "logging.level.org.springframework.web.client.RestTemplate=DEBUG",
+        "logging.level.org.apache.http.wire=DEBUG"
+})
 public class OrderStateRestTest {
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    private TestRestTemplate restTemplate;
 
-    private MockMvc mockMvc;
-
-    private String orderLocation;
+    private URI orderLocation;
 
     @Before
     @SneakyThrows
     public void setup() {
-        mockMvc = webAppContextSetup(webApplicationContext).build();
-        orderLocation = mockMvc.perform(post("/orders")
-                .content("{}")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andDo(print())
-                .andReturn()
-                .getResponse()
-                .getHeader("Location");
+        orderLocation = this.restTemplate.exchange("/orders",HttpMethod.POST, jsonPayload("{}"), Void.class).getHeaders().getLocation();
     }
 
     @Test
     @SneakyThrows
     public void test() {
-        mockMvc.perform(get(orderLocation))
-        .andDo(print());
+        Link eventLink = new Traverson(orderLocation, MediaTypes.HAL_JSON).follow("unlock-delivery").asLink();
+        assertThat(eventLink).isNotNull();
 
+        ResponseEntity<Void> response = this.restTemplate.postForEntity(eventLink.getHref(), "", Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
 
-        // TODO: extract link target from response. e.g.
-        // Link unlockLink = new Traverson(URI.create(orderLocation), MediaTypes.HAL_JSON).follow("unlock-delivery").asLink();
+        eventLink = new Traverson(orderLocation, MediaTypes.HAL_JSON).follow("deliver").asLink();
+        Link eventLink2 = eventLink;
+        assertThat(eventLink).isNotNull();
+        response = this.restTemplate.postForEntity(eventLink.getHref(), "", Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
 
-        mockMvc.perform(post(orderLocation + "/receive/UnlockDelivery"))
-        .andExpect(status().isAccepted());
+        eventLink = new Traverson(orderLocation, MediaTypes.HAL_JSON).follow("receive-payment").asLink();
+        assertThat(eventLink).isNotNull();
+        response = this.restTemplate.postForEntity(eventLink.getHref(), "", Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
 
-        mockMvc.perform(get(orderLocation))
-        .andDo(print())
-        .andExpect(jsonPath("$._links.deliver", notNullValue()));
+        eventLink = new Traverson(orderLocation, MediaTypes.HAL_JSON).follow("refund").asLink();
+        assertThat(eventLink).isNotNull();
+        response = this.restTemplate.postForEntity(eventLink2.getHref(), "", Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
 
-        mockMvc.perform(post(orderLocation + "/receive/Deliver"))
-        .andExpect(status().isAccepted());
+    }
 
-        mockMvc.perform(get(orderLocation))
-        .andDo(print())
-        .andExpect(jsonPath("$._links.receive-payment", notNullValue()));
-
-        mockMvc.perform(post(orderLocation + "/receive/ReceivePayment"))
-        .andExpect(status().isAccepted());
-
-        mockMvc.perform(get(orderLocation))
-        .andDo(print())
-        .andExpect(jsonPath("$._links.refund", notNullValue()));
-
-        mockMvc.perform(post(orderLocation + "/receive/Deliver"))
-        .andExpect(status().isUnprocessableEntity());
-
+    private HttpEntity<String> jsonPayload(String bodyJson) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new HttpEntity<String>(bodyJson ,headers);
     }
 }
