@@ -55,5 +55,8 @@ dependencies {
         compile("org.springframework.statemachine:spring-statemachine-kryo:$springStatemachineVersion")
         testCompile("org.springframework.statemachine:spring-statemachine-test:$springStatemachineVersion")
     }
-    compileOnly('org.projectlombok:lombok:1.16.10')
+    '1.16.10'.with { lombokVersion -> 
+	compileOnly("org.projectlombok:lombok:$lombokVersion")
+	testCompileOnly("org.projectlombok:lombok:$lombokVersion")
+    }
 }

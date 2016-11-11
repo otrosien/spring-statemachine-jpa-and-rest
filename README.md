@@ -1,3 +1,6 @@
+[ ![Build Status](https://travis-ci.org/otrosien/spring-statemachine-jpa.svg)](https://travis-ci.org/otrosien/spring-statemachine-jpa)
+
+
 # Spring Statemachine using JPA
 
 This is just a sample project trying out the combination of Spring-Statemachine,
