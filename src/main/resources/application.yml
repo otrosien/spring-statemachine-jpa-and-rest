@@ -9,6 +9,10 @@ spring:
     url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false"
     username: sa
     password:
+  jpa:
+    generate-ddl: true
+    hibernate:
+      use-new-id-generator-mappings: true
 
 logging:
   level:

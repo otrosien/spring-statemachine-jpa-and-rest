@@ -39,10 +39,10 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
     |     |                  |                 |  |    (11)    |  |          |                  |          |  |    (12)    |  |  |
     |     |                  |                 |  |            v  |          |                  |          |  |            v  |  |
     |     +------------------+                 +------------------+          +------------------+          +------------------+  |
-    |        | ^                                             |                                                   ^       | ^     |
+    |        | ^                                             | |         [if paid] (4) Refund                ^   ^       | ^     |
+    |        | |                                             | +---------------------------------------------+   |       | |     |
     |        | |                                             |                                                   |       | |     |
-    |        | |                                             |                                                   |       | |     |
-    |        | |                                             |                       (8) Cancel                  |       | |     |
+    |        | |                                             |           [if !paid]  (8) Cancel                  |       | |     |
     |        | |           (5) Reopen                        +---------------------------------------------------+       | |     |
     |        | +---------------------------------------------------------------------------------------------------------+ |     |
     |        |                                              (6) Cancel                                                     |     |
@@ -54,7 +54,7 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
     +-------------------------------------------------------------------------------------------------------------------------------------------------------------+
     |                                                                     post-payment flow                                                                       |
     +-------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    |                                (7)                            (2) [if !paid]                 (10)                            (3) [if paid]                  |
+    |                                (7)                            (9) [if !paid]                 (10)                            (3) [if paid]                  |
     |     +------------------+ UnlockDelivery  +-- ---------------+  Deliver +------------------+ ReceivePayment +---------------+  Refund  +------------------+  |
     | *-->|       Open       |---------------->| ReadyForDelivery |--------->| AwaitingPayment  |--------------->|   Completed   |--------->|     Canceled     |  |
     |     |                  |                 |                  |          |                  |                |               |          |                  |  |
@@ -63,10 +63,10 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
     |     |                  |                 |  |    (11)    |  |          |                  |                |               |          |  |    (12)    |  |  |
     |     |                  |                 |  |            v  |          |                  |                |               |          |  |            v  |  |
     |     +------------------+                 +------------------+          +------------------+                +---------------+          +------------------+  |
-    |        | ^                                             |                                                                                     ^      | ^     |
+    |        | ^                                             |  |          [if paid] (4) Refund                                               ^    ^      | ^     |
+    |        | |                                             |  +-----------------------------------------------------------------------------+    |      | |     |
     |        | |                                             |                                                                                     |      | |     |
-    |        | |                                             |                                                                                     |      | |     |
-    |        | |                                             |                       (8) Cancel                                                    |      | |     |
+    |        | |                                             |             [if !paid] (8) Cancel                                                   |      | |     |
     |        | |           (5) Reopen                        +-------------------------------------------------------------------------------------+      | |     |
     |        | +------------------------------------------------------------------------------------------------------------------------------------------+ |     |
     |        |                                              (6) Cancel                                                                                      |     |
@@ -150,6 +150,7 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
             .withExternal()
                 .source(OrderState.Completed)
                 .target(OrderState.Canceled)
+                .guard(isPaid())
                 .event(OrderEvent.Refund)
                 .action(refundPayment())
             .and()
@@ -175,6 +176,7 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
             .withExternal()
                 .source(OrderState.ReadyForDelivery)
                 .target(OrderState.Canceled)
+                .guard(not(isPaid()))
                 .event(OrderEvent.Cancel)
             .and()
             // (9)

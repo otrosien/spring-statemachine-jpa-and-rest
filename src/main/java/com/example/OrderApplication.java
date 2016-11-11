@@ -21,24 +21,23 @@ class OrderApplication {
     }
 
     @Bean
-    public StateMachinePersister<OrderState, OrderEvent, Long> persister(StateMachinePersist<OrderState, OrderEvent, Long> persist) {
+    public StateMachinePersister<OrderState, OrderEvent, Order> persister(
+            StateMachinePersist<OrderState, OrderEvent, Order> persist) {
         return new DefaultStateMachinePersister<>(persist);
     }
 
     @Bean
-    public StateMachinePersist<OrderState, OrderEvent, Long> persist(OrderRepository repo) {
-        return new StateMachinePersist<OrderState, OrderEvent, Long>() {
+    public StateMachinePersist<OrderState, OrderEvent, Order> persist(OrderRepository repo) {
+        return new StateMachinePersist<OrderState, OrderEvent, Order>() {
 
             @Override
-            public StateMachineContext<OrderState, OrderEvent> read(Long contextObj) throws Exception {
-                return repo.getOne(contextObj).getStateMachineContext();
+            public StateMachineContext<OrderState, OrderEvent> read(Order order) throws Exception {
+                return order.getStateMachineContext();
             }
 
             @Override
-            public void write(StateMachineContext<OrderState, OrderEvent> context, Long contextObj) throws Exception {
-                Order o = repo.getOne(contextObj);
-                o.setStateMachineContext(context);
-                repo.save(o);
+            public void write(StateMachineContext<OrderState, OrderEvent> context, Order contextObj) throws Exception {
+                contextObj.setStateMachineContext(context);
             }
         };
     }
