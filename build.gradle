@@ -34,15 +34,8 @@ dependencyManagement {
 }
 
 dependencies {
-
     compile('org.springframework.boot:spring-boot-starter')
     compile("org.springframework.boot:spring-boot-starter-data-jpa") 
-//    {
-//        exclude module: 'hibernate-core'
-//        exclude module: 'hibernate-entitymanager'
-//    }
-//    compile 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.6.3'
-
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.springframework.boot:spring-boot-starter-data-rest")
     runtime('org.springframework.data:spring-data-rest-hal-browser')
@@ -56,7 +49,7 @@ dependencies {
         testCompile("org.springframework.statemachine:spring-statemachine-test:$springStatemachineVersion")
     }
     '1.16.10'.with { lombokVersion -> 
-	compileOnly("org.projectlombok:lombok:$lombokVersion")
-	testCompileOnly("org.projectlombok:lombok:$lombokVersion")
+        compileOnly("org.projectlombok:lombok:$lombokVersion")
+        testCompileOnly("org.projectlombok:lombok:$lombokVersion")
     }
 }
