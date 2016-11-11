@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 @Converter(autoApply=true)
-public class OrderStateMachineAttributeConverter implements AttributeConverter<StateMachineContext<OrderState, OrderEvent>, byte[]> {
+public class OrderStateMachineContextConverter implements AttributeConverter<StateMachineContext<OrderState, OrderEvent>, byte[]> {
 
     private static final ThreadLocal<Kryo> kryoThreadLocal = new ThreadLocal<Kryo>() {
 

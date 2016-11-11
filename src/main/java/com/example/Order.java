@@ -33,4 +33,10 @@ public class Order extends AbstractPersistable<Long> implements Identifiable<Lon
     @JsonIgnore
     StateMachineContext<OrderState, OrderEvent> stateMachineContext;
 
+    @JsonIgnore
+    @Override
+    public boolean isNew() {
+        // TODO Auto-generated method stub
+        return super.isNew();
+    }
 }

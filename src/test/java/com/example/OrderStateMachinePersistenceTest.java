@@ -24,7 +24,7 @@ import lombok.SneakyThrows;
 public class OrderStateMachinePersistenceTest {
 
     @Autowired
-    StateMachinePersister<OrderState, OrderEvent, Long> persister;
+    StateMachinePersister<OrderState, OrderEvent, Order> persister;
 
     @Autowired
     OrderRepository repo;
@@ -47,7 +47,7 @@ public class OrderStateMachinePersistenceTest {
         orderStateMachine.sendEvent(OrderEvent.UnlockDelivery);
 
         // when persisting and making sure we flushed and cleared all caches...
-        persister.persist(orderStateMachine, o.getId());
+        persister.persist(orderStateMachine, o);
         em.flush();
         em.clear();
 
@@ -57,7 +57,7 @@ public class OrderStateMachinePersistenceTest {
 
         // and the statemachinecontext can be used to restore a new state machine.
         StateMachine<OrderState, OrderEvent> orderStateMachineNew = orderStateFactory.getStateMachine();
-        persister.restore(orderStateMachineNew, o.getId());
+        persister.restore(orderStateMachineNew, o);
         assertThat(orderStateMachineNew.getState().getId()).isEqualTo(OrderState.ReadyForDelivery);
     }
 
