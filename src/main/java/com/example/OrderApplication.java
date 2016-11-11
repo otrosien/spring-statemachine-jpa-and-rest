@@ -27,7 +27,7 @@ class OrderApplication {
     }
 
     @Bean
-    public StateMachinePersist<OrderState, OrderEvent, Order> persist(OrderRepository repo) {
+    public StateMachinePersist<OrderState, OrderEvent, Order> persist() {
         return new StateMachinePersist<OrderState, OrderEvent, Order>() {
 
             @Override
@@ -36,8 +36,8 @@ class OrderApplication {
             }
 
             @Override
-            public void write(StateMachineContext<OrderState, OrderEvent> context, Order contextObj) throws Exception {
-                contextObj.setStateMachineContext(context);
+            public void write(StateMachineContext<OrderState, OrderEvent> context, Order order) throws Exception {
+                order.setStateMachineContext(context);
             }
         };
     }

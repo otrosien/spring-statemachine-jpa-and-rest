@@ -1,8 +1,10 @@
 package com.example;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -11,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.client.Traverson;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,23 +53,30 @@ public class OrderStateRestTest {
         mockMvc.perform(get(orderLocation))
         .andDo(print());
 
+
+        // TODO: extract link target from response. e.g.
+        // Link unlockLink = new Traverson(URI.create(orderLocation), MediaTypes.HAL_JSON).follow("unlock-delivery").asLink();
+
         mockMvc.perform(post(orderLocation + "/receive/UnlockDelivery"))
         .andExpect(status().isAccepted());
 
         mockMvc.perform(get(orderLocation))
-        .andDo(print());
+        .andDo(print())
+        .andExpect(jsonPath("$._links.deliver", notNullValue()));
 
         mockMvc.perform(post(orderLocation + "/receive/Deliver"))
         .andExpect(status().isAccepted());
 
         mockMvc.perform(get(orderLocation))
-        .andDo(print());
+        .andDo(print())
+        .andExpect(jsonPath("$._links.receive-payment", notNullValue()));
 
         mockMvc.perform(post(orderLocation + "/receive/ReceivePayment"))
         .andExpect(status().isAccepted());
 
         mockMvc.perform(get(orderLocation))
-        .andDo(print());
+        .andDo(print())
+        .andExpect(jsonPath("$._links.refund", notNullValue()));
 
         mockMvc.perform(post(orderLocation + "/receive/Deliver"))
         .andExpect(status().isUnprocessableEntity());

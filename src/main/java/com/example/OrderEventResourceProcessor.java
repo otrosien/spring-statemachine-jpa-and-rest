@@ -32,25 +32,37 @@ public class OrderEventResourceProcessor implements ResourceProcessor<Resource<O
 
         switch(stateMachine.getState().getId()) {
         case Open:
-            resource.add(eventLink(OrderEvent.ReceivePayment, "receive-payment")); // (1)
+            if(!stateMachine.getExtendedState().get("paid", Boolean.class)) {
+                resource.add(eventLink(OrderEvent.ReceivePayment, "receive-payment")); // (1)
+            }
             resource.add(eventLink(OrderEvent.Cancel, "cancel"));                  // (6)
             resource.add(eventLink(OrderEvent.UnlockDelivery, "unlock-delivery")); // (7)
             break;
         case ReadyForDelivery:
-            resource.add(eventLink(OrderEvent.ReceivePayment, "receive-payment")); // (11)
+            if(!stateMachine.getExtendedState().get("paid", Boolean.class)) {
+                resource.add(eventLink(OrderEvent.ReceivePayment, "receive-payment")); // (11)
+            }
             resource.add(eventLink(OrderEvent.Deliver, "deliver"));                // (2/9)
-            resource.add(eventLink(OrderEvent.Refund, "refund"));                  // (4)
-            resource.add(eventLink(OrderEvent.Cancel, "cancel"));                  // (8)
+            if(stateMachine.getExtendedState().get("paid", Boolean.class)) {
+                resource.add(eventLink(OrderEvent.Refund, "refund"));              // (4)
+            }
+            if(!stateMachine.getExtendedState().get("paid", Boolean.class)) {
+                resource.add(eventLink(OrderEvent.Cancel, "cancel"));              // (8)
+            }
             break;
         case AwaitingPayment:
             resource.add(eventLink(OrderEvent.ReceivePayment, "receive-payment")); // (10)
             break;
         case Completed:
-                resource.add(eventLink(OrderEvent.Refund, "refund"));              // (3)
+                if(stateMachine.getExtendedState().get("paid", Boolean.class)) {
+                    resource.add(eventLink(OrderEvent.Refund, "refund"));          // (3)
+                }
             break;
         case Canceled:
             resource.add(eventLink(OrderEvent.Reopen, "reopen"));                  // (5)
-            resource.add(eventLink(OrderEvent.ReceivePayment, "receive-payment")); // (12)
+            if(!stateMachine.getExtendedState().get("paid", Boolean.class)) {
+                resource.add(eventLink(OrderEvent.ReceivePayment, "receive-payment")); // (12)
+            }
             break;
         }
 
