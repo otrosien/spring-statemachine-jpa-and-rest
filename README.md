@@ -5,7 +5,7 @@ JPA and Spring Data REST.
 
 ## The State Machine
 
-The state machine is a simulation of an order fulfillment process, offering two different flows. One for pay-before-shipping
+The state machine is a simulation of an order fulfillment process, offering two different flows: One for pay-before-shipping
 (prepayment, paypal etc.), and one for ship-before-payment (cash-on-delivery, invoice).
 
 The two flows are shown below.
