@@ -116,6 +116,6 @@ when a new order is created, initializing it with a new state machine.
 
 ## What needs improvement
 
-I haven't fully figured out yet, how to introspect the state machine meta model,
+I haven't fully figured out yet how to introspect the state machine meta model,
 to produce links in a more generic fashion. Until then the `OrderEventResourceProcessor`
 has full knowledge of the states and transitions, and renders links accordingly.
