@@ -34,7 +34,7 @@ public class ContextObjectResourceProcessor<S, E, T extends ContextEntity<S, E, 
         for (Transition<S, E> transition : stateMachine.getTransitions()) {
             if(stateMachine.getState().getId().equals(transition.getSource().getId())) {
                 E event = transition.getTrigger().getEvent();
-                log.info("Found transition triggered by event: " + event);
+                log.info("Found transition triggered by event: {}", event);
                 resource.add(eventLink(contextObject, event, TO_KEBAB.translate(event.toString())));
             }
         }
