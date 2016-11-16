@@ -61,13 +61,15 @@ public class OrderStateMachinePersistenceTest {
         assertThat(o.getStateMachineContext()).isNotNull();
         assertThat(o.getCurrentState()).isEqualTo(OrderState.ReadyForDelivery);
 
-        // and the statemachinecontext can be used to restore a new state machine.
+        // and the statemachinecontext can be used to restore a new state
+        // machine.
         StateMachine<OrderState, OrderEvent> orderStateMachineNew = orderStateFactory.getStateMachine();
         persister.restore(orderStateMachineNew, o);
         assertThat(orderStateMachineNew.getState().getId()).isEqualTo(OrderState.ReadyForDelivery);
 
         // and the repository should find one order by its current state.
-        assertThat(repo.findByCurrentState(OrderState.ReadyForDelivery, new PageRequest(0, 10)).getNumberOfElements()).isEqualTo(1);
+        assertThat(repo.findByCurrentState(OrderState.ReadyForDelivery, new PageRequest(0, 10)).getNumberOfElements())
+                .isEqualTo(1);
     }
 
 }

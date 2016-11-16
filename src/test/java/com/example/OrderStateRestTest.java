@@ -24,12 +24,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import lombok.SneakyThrows;
 
-
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= {OrderApplication.class}, webEnvironment = WebEnvironment.RANDOM_PORT, properties = {
-        "logging.level.org.springframework.web.client.RestTemplate=DEBUG",
-        "logging.level.org.apache.http.wire=DEBUG"
-})
+@SpringBootTest(classes = { OrderApplication.class }, webEnvironment = WebEnvironment.RANDOM_PORT, properties = {
+        "logging.level.org.springframework.web.client.RestTemplate=DEBUG", "logging.level.org.apache.http.wire=DEBUG" })
 public class OrderStateRestTest {
 
     @Autowired
@@ -40,7 +37,8 @@ public class OrderStateRestTest {
     @Before
     @SneakyThrows
     public void setup() {
-        orderLocation = this.restTemplate.exchange("/orders",HttpMethod.POST, jsonPayload("{}"), Void.class).getHeaders().getLocation();
+        orderLocation = this.restTemplate.exchange("/orders", HttpMethod.POST, jsonPayload("{}"), Void.class)
+                .getHeaders().getLocation();
     }
 
     @Test
@@ -73,6 +71,6 @@ public class OrderStateRestTest {
     private HttpEntity<String> jsonPayload(String bodyJson) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        return new HttpEntity<String>(bodyJson ,headers);
+        return new HttpEntity<String>(bodyJson, headers);
     }
 }

@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @SuppressWarnings("rawtypes")
 @RequiredArgsConstructor
-@Converter(autoApply=true)
+@Converter(autoApply = true)
 public class StateMachineContextConverter implements AttributeConverter<StateMachineContext, byte[]> {
 
     private static final ThreadLocal<Kryo> kryoThreadLocal = new ThreadLocal<Kryo>() {
@@ -47,7 +47,7 @@ public class StateMachineContextConverter implements AttributeConverter<StateMac
     }
 
     private byte[] serialize(StateMachineContext context) {
-        if(context == null) {
+        if (context == null) {
             return null;
         }
         Kryo kryo = kryoThreadLocal.get();

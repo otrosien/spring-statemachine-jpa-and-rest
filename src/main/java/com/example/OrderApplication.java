@@ -32,11 +32,10 @@ class OrderApplication {
     }
 
     @Bean
-    public ContextObjectResourceProcessor<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>> orderResourceProcessor(EntityLinks entityLinks,
+    public ContextObjectResourceProcessor<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>> orderResourceProcessor(
+            EntityLinks entityLinks,
             DefaultStateMachineAdapter<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, ? extends Serializable>> orderStateMachineAdapter) {
-                return new ContextObjectResourceProcessor<>(entityLinks, orderStateMachineAdapter);
-        
-//        return new ContextObjectResourceProcessor<>(entityLinks, orderStateMachineAdapter);
+        return new ContextObjectResourceProcessor<>(entityLinks, orderStateMachineAdapter);
     }
 
     @Bean
@@ -50,12 +49,14 @@ class OrderApplication {
         return new StateMachinePersist<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>>() {
 
             @Override
-            public StateMachineContext<OrderState, OrderEvent> read(ContextEntity<OrderState, OrderEvent, Serializable> order) throws Exception {
+            public StateMachineContext<OrderState, OrderEvent> read(
+                    ContextEntity<OrderState, OrderEvent, Serializable> order) throws Exception {
                 return order.getStateMachineContext();
             }
 
             @Override
-            public void write(StateMachineContext<OrderState, OrderEvent> context, ContextEntity<OrderState, OrderEvent, Serializable> order) throws Exception {
+            public void write(StateMachineContext<OrderState, OrderEvent> context,
+                    ContextEntity<OrderState, OrderEvent, Serializable> order) throws Exception {
                 order.setStateMachineContext(context);
             }
         };
