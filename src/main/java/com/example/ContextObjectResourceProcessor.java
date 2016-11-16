@@ -1,51 +1,51 @@
-package com.example.order;
+package com.example;
 
+import java.io.Serializable;
 import java.util.function.Predicate;
 
 import org.springframework.hateoas.EntityLinks;
+import org.springframework.hateoas.Identifiable;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.transition.Transition;
-import org.springframework.stereotype.Component;
 
-import com.example.DefaultStateMachineAdapter;
 import com.example.order.OrderStateMachineConfiguration.OrderEvent;
 import com.example.order.OrderStateMachineConfiguration.OrderState;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Component
 @RequiredArgsConstructor
 @Slf4j
-public class OrderEventResourceProcessor implements ResourceProcessor<Resource<Order>> {
+public class ContextObjectResourceProcessor<S, E> implements ResourceProcessor<Resource<ContextObject<S, E>>> {
+
+    private static final KebabCaseStrategy TO_KEBAB = new KebabCaseStrategy();
 
     final EntityLinks entityLinks;
 
-    final DefaultStateMachineAdapter<OrderState, OrderEvent, Order> orderStateMachineAdapter;
-
-    static final KebabCaseStrategy TO_KEBAB = new KebabCaseStrategy();
+    final DefaultStateMachineAdapter<S, E, ContextObject<S, E>> stateMachineAdapter;
 
     @Override
-    public Resource<Order> process(Resource<Order> resource) {
-        Order order = resource.getContent();
-        StateMachine<OrderState, OrderEvent> stateMachine = orderStateMachineAdapter.restore(order);
+    public Resource<ContextObject<S, E>> process(Resource<ContextObject<S, E>> resource) {
+        ContextObject<S, E> contextObject = resource.getContent();
+        StateMachine<S, E> stateMachine = stateMachineAdapter.restore(contextObject);
 
-        for (Transition<OrderState, OrderEvent> transition : stateMachine.getTransitions()) {
+        for (Transition<S, E> transition : stateMachine.getTransitions()) {
             if(stateMachine.getState().getId().equals(transition.getSource().getId())) {
-                OrderEvent event = transition.getTrigger().getEvent();
+                E event = transition.getTrigger().getEvent();
                 log.info("Found transition triggered by event: " + event);
-                resource.add(eventLink(order, event, TO_KEBAB.translate(event.toString())));
+                resource.add(eventLink(contextObject, event, TO_KEBAB.translate(event.toString())));
             }
         }
 
         return resource;
     }
 
-    private Link eventLink(Order order, OrderEvent event, String rel) {
-        return entityLinks.linkForSingleResource(order).slash("receive").slash(event).withRel(rel);
+    private Link eventLink(ContextObject<S, E> contextObject, E event, String rel) {
+        // TODO: Fix this ugly cast!
+        return entityLinks.linkForSingleResource((Identifiable<Serializable>)contextObject).slash("receive").slash(event).withRel(rel);
     }
 
     static class PaidPredicate implements Predicate<StateMachine<OrderState, OrderEvent>> {

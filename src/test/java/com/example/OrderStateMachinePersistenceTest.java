@@ -27,7 +27,7 @@ import lombok.SneakyThrows;
 public class OrderStateMachinePersistenceTest {
 
     @Autowired
-    StateMachinePersister<OrderState, OrderEvent, Order> persister;
+    StateMachinePersister<OrderState, OrderEvent, ContextObject<OrderState, OrderEvent>> persister;
 
     @Autowired
     OrderRepository repo;

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.example.ContextObject;
 import com.example.DefaultStateMachineAdapter;
 import com.example.order.OrderStateMachineConfiguration.OrderEvent;
 import com.example.order.OrderStateMachineConfiguration.OrderState;
@@ -21,7 +22,7 @@ import lombok.SneakyThrows;
 @RequiredArgsConstructor
 public class OrderEventController {
 
-    final DefaultStateMachineAdapter<OrderState, OrderEvent, Order> orderStateMachineAdapter;
+    final DefaultStateMachineAdapter<OrderState, OrderEvent, ContextObject<OrderState, OrderEvent>> orderStateMachineAdapter;
 
     @RequestMapping(path = "/orders/{id}/receive/{event}", method = RequestMethod.POST)
     @SneakyThrows
