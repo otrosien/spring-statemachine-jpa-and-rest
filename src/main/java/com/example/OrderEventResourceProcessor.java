@@ -20,7 +20,7 @@ public class OrderEventResourceProcessor implements ResourceProcessor<Resource<O
 
     final EntityLinks entityLinks;
 
-    final OrderStateMachineAdapter orderStateMachineAdapter;
+    final DefaultStateMachineAdapter<OrderState, OrderEvent, Order> orderStateMachineAdapter;
 
     @Override
     public Resource<Order> process(Resource<Order> resource) {

@@ -20,7 +20,7 @@ import lombok.SneakyThrows;
 @RequiredArgsConstructor
 public class OrderEventController {
 
-    final OrderStateMachineAdapter orderStateMachineAdapter;
+    final DefaultStateMachineAdapter<OrderState, OrderEvent, Order> orderStateMachineAdapter;
 
     @RequestMapping(path = "/orders/{id}/receive/{event}", method = RequestMethod.POST)
     @SneakyThrows

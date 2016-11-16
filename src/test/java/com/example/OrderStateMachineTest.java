@@ -15,19 +15,19 @@ import lombok.SneakyThrows;
 
 public class OrderStateMachineTest extends AbstractStateMachineTests {
 
-    StateMachineFactory<OrderState, OrderEvent> orderStateFactory;
+    StateMachineFactory<OrderState, OrderEvent> orderStateMachineFactory;
 
     @Override
     protected AnnotationConfigApplicationContext buildContext() {
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(OrderStateMachineConfiguration.class);
-        orderStateFactory = ctx.getBean(StateMachineFactory.class);
+        orderStateMachineFactory = ctx.getBean(StateMachineFactory.class);
         return ctx;
     }
 
     @Test
     @SneakyThrows
     public void testPrepaymentFlow() {
-        StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateFactory.getStateMachine();
+        StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateMachineFactory.getStateMachine();
         StateMachineTestPlan<OrderState, OrderEvent> plan =
                 StateMachineTestPlanBuilder.<OrderState, OrderEvent>builder()
                     .stateMachine(orderStateMachine)
@@ -78,7 +78,7 @@ public class OrderStateMachineTest extends AbstractStateMachineTests {
     @Test
     @SneakyThrows
     public void testPostpaymentFlow() {
-        StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateFactory.getStateMachine();
+        StateMachine<OrderState, OrderEvent> orderStateMachine = orderStateMachineFactory.getStateMachine();
         StateMachineTestPlan<OrderState, OrderEvent> plan =
                 StateMachineTestPlanBuilder.<OrderState, OrderEvent>builder()
                     .stateMachine(orderStateMachine)

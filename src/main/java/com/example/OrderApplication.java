@@ -6,6 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.statemachine.StateMachineContext;
 import org.springframework.statemachine.StateMachinePersist;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.persist.DefaultStateMachinePersister;
 import org.springframework.statemachine.persist.StateMachinePersister;
 
@@ -18,6 +19,13 @@ class OrderApplication {
 
     public static void main(String[] args) {
         new SpringApplicationBuilder(OrderApplication.class).build().run(args);
+    }
+
+    @Bean
+    public DefaultStateMachineAdapter<OrderState, OrderEvent, Order> orderStateMachineAdapter(
+            StateMachineFactory<OrderState, OrderEvent> stateMachineFactory,
+            StateMachinePersister<OrderState, OrderEvent, Order> persister) {
+        return new DefaultStateMachineAdapter<>(stateMachineFactory, persister);
     }
 
     @Bean
