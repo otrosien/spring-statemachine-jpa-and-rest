@@ -5,8 +5,6 @@ import org.springframework.stereotype.Component;
 
 import com.example.ContextObject;
 import com.example.DefaultStateMachineAdapter;
-import com.example.order.OrderStateMachineConfiguration.OrderEvent;
-import com.example.order.OrderStateMachineConfiguration.OrderState;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

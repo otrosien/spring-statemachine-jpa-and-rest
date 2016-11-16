@@ -11,8 +11,8 @@ import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.transition.Transition;
 
-import com.example.order.OrderStateMachineConfiguration.OrderEvent;
-import com.example.order.OrderStateMachineConfiguration.OrderState;
+import com.example.order.OrderState;
+import com.example.order.OrderEvent;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -13,8 +13,6 @@ import org.springframework.hateoas.Identifiable;
 import org.springframework.statemachine.StateMachineContext;
 
 import com.example.ContextObject;
-import com.example.order.OrderStateMachineConfiguration.OrderEvent;
-import com.example.order.OrderStateMachineConfiguration.OrderState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AccessLevel;
@@ -41,6 +39,7 @@ public class Order extends AbstractPersistable<Long> implements Identifiable<Lon
     @Enumerated(EnumType.STRING)
     OrderState currentState;
 
+    @Override
     public void setStateMachineContext(@NonNull StateMachineContext<OrderState, OrderEvent> stateMachineContext) {
         this.currentState = stateMachineContext.getState();
         this.stateMachineContext = stateMachineContext;

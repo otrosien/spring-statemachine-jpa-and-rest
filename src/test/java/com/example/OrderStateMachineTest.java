@@ -8,9 +8,9 @@ import org.springframework.statemachine.test.AbstractStateMachineTests;
 import org.springframework.statemachine.test.StateMachineTestPlan;
 import org.springframework.statemachine.test.StateMachineTestPlanBuilder;
 
+import com.example.order.OrderEvent;
+import com.example.order.OrderState;
 import com.example.order.OrderStateMachineConfiguration;
-import com.example.order.OrderStateMachineConfiguration.OrderEvent;
-import com.example.order.OrderStateMachineConfiguration.OrderState;
 
 import lombok.SneakyThrows;
 
