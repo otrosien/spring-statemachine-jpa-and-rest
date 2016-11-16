@@ -112,6 +112,8 @@ when a new order is created, initializing it with a new state machine.
 
 ### Generic components
 
+- *ContextEntity* : Interface combining the role of a statemachine context object and spring-hateoas Identifiable
+
 - *ContextObjectEventResourceProcessor* : For adding the links to the response.
 
 - *StateMachineContextConverter* : The converter from StateMachineContext to byte[] and back.
