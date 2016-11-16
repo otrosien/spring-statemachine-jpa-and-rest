@@ -99,7 +99,7 @@ the state transitions that are possible for the given state.
 }
 ```
 
-### The relevant components
+### Order-specfic components
 
 - *Order* : My entity acting as context object
 
@@ -108,14 +108,11 @@ the state transitions that are possible for the given state.
 - *OrderCreatedEventListener* : An `AbstractRepositoryEventListener` getting notified
 when a new order is created, initializing it with a new state machine.
 
-- *OrderEventResourceProcessor* : For adding the links to the response.
-
-- *OrderStateMachineContextConverter* : The converter from OrderStateMachineContext to byte[] and back.
-
 - *OrderEventController* : RestController for receiving events.
 
-## What needs improvement
+### Generic components
 
-I haven't fully figured out yet how to introspect the state machine meta model,
-to produce links in a more generic fashion. Until then the `OrderEventResourceProcessor`
-has full knowledge of the states and transitions, and renders links accordingly.
+- *ContextObjectEventResourceProcessor* : For adding the links to the response.
+
+- *StateMachineContextConverter* : The converter from StateMachineContext to byte[] and back.
+
