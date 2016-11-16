@@ -1,4 +1,4 @@
-package com.example;
+package com.example.order;
 
 import javax.transaction.Transactional;
 
@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.example.OrderStateMachineConfiguration.OrderEvent;
-import com.example.OrderStateMachineConfiguration.OrderState;
+import com.example.DefaultStateMachineAdapter;
+import com.example.order.OrderStateMachineConfiguration.OrderEvent;
+import com.example.order.OrderStateMachineConfiguration.OrderState;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

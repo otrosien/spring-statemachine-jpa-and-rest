@@ -1,4 +1,4 @@
-package com.example;
+package com.example.order;
 
 import java.util.EnumSet;
 
@@ -16,15 +16,15 @@ import org.springframework.statemachine.listener.StateMachineListener;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
-import com.example.OrderStateMachineConfiguration.OrderEvent;
-import com.example.OrderStateMachineConfiguration.OrderState;
+import com.example.order.OrderStateMachineConfiguration.OrderEvent;
+import com.example.order.OrderStateMachineConfiguration.OrderState;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
 @EnableStateMachineFactory(contextEvents=false)
-class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<OrderState, OrderEvent> {
+public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<OrderState, OrderEvent> {
 
     /**
     +----------------------------------------------------------------------------------------------------------------------------+
@@ -137,6 +137,7 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
                 .target(OrderState.Completed)
                 .guard(isPaid())
                 .event(OrderEvent.Deliver)
+                .action(noopAction())
             .and()
             // (3)
             .withExternal()
@@ -159,18 +160,21 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
                 .source(OrderState.Canceled)
                 .target(OrderState.Open)
                 .event(OrderEvent.Reopen)
+                .action(noopAction())
             .and()
             // (6)
             .withExternal()
                 .source(OrderState.Open)
                 .target(OrderState.Canceled)
                 .event(OrderEvent.Cancel)
+                .action(noopAction())
             .and()
             // (7)
             .withExternal()
                 .source(OrderState.Open)
                 .target(OrderState.ReadyForDelivery)
                 .event(OrderEvent.UnlockDelivery)
+                .action(noopAction())
             .and()
             // (8)
             .withExternal()
@@ -178,6 +182,7 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
                 .target(OrderState.Canceled)
                 .guard(not(isPaid()))
                 .event(OrderEvent.Cancel)
+                .action(noopAction())
             .and()
             // (9)
             .withExternal()
@@ -185,6 +190,7 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
                 .target(OrderState.AwaitingPayment)
                 .guard(not(isPaid()))
                 .event(OrderEvent.Deliver)
+                .action(noopAction())
             .and()
             // (10)
             .withExternal()
@@ -198,6 +204,7 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
                 .source(OrderState.ReadyForDelivery)
                 .event(OrderEvent.ReceivePayment)
                 .action(receivePayment())
+                .action(noopAction())
             .and()
             // (12)
             .withInternal()
@@ -210,6 +217,10 @@ class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAdapter<O
 
     public Action<OrderState, OrderEvent> receivePayment() {
         return context -> setPaid(context.getExtendedState());
+    }
+
+    public Action<OrderState, OrderEvent> noopAction() {
+        return context->{};
     }
 
     public Action<OrderState, OrderEvent> refundPayment() {

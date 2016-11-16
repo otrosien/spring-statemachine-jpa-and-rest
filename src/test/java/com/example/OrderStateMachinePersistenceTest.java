@@ -15,8 +15,10 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.persist.StateMachinePersister;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.example.OrderStateMachineConfiguration.OrderEvent;
-import com.example.OrderStateMachineConfiguration.OrderState;
+import com.example.order.Order;
+import com.example.order.OrderRepository;
+import com.example.order.OrderStateMachineConfiguration.OrderEvent;
+import com.example.order.OrderStateMachineConfiguration.OrderState;
 
 import lombok.SneakyThrows;
 

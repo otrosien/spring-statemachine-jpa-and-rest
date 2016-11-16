@@ -1,10 +1,11 @@
-package com.example;
+package com.example.order;
 
 import org.springframework.data.rest.core.event.AbstractRepositoryEventListener;
 import org.springframework.stereotype.Component;
 
-import com.example.OrderStateMachineConfiguration.OrderEvent;
-import com.example.OrderStateMachineConfiguration.OrderState;
+import com.example.DefaultStateMachineAdapter;
+import com.example.order.OrderStateMachineConfiguration.OrderEvent;
+import com.example.order.OrderStateMachineConfiguration.OrderState;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

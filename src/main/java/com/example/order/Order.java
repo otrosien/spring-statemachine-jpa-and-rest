@@ -1,4 +1,4 @@
-package com.example;
+package com.example.order;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -12,8 +12,9 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.hateoas.Identifiable;
 import org.springframework.statemachine.StateMachineContext;
 
-import com.example.OrderStateMachineConfiguration.OrderEvent;
-import com.example.OrderStateMachineConfiguration.OrderState;
+import com.example.ContextObject;
+import com.example.order.OrderStateMachineConfiguration.OrderEvent;
+import com.example.order.OrderStateMachineConfiguration.OrderState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AccessLevel;
@@ -27,7 +28,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level=AccessLevel.PRIVATE)
 @Access(AccessType.FIELD)
 @Table(name="orders", indexes=@Index(columnList="currentState"))
-public class Order extends AbstractPersistable<Long> implements Identifiable<Long> { // NOSONAR
+public class Order extends AbstractPersistable<Long> implements Identifiable<Long>, ContextObject<OrderState, OrderEvent> { // NOSONAR
 
     private static final long serialVersionUID = 8848887579564649636L;
 
