@@ -18,6 +18,7 @@ public class OrderStateMachineTest extends AbstractStateMachineTests {
 
     StateMachineFactory<OrderState, OrderEvent> orderStateMachineFactory;
 
+    @SuppressWarnings("unchecked")
     @Override
     protected AnnotationConfigApplicationContext buildContext() {
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(OrderStateMachineConfiguration.class);
