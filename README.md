@@ -68,7 +68,7 @@ I use a simple domain object as state machine context (my `Order` entity), which
 the StateMachineContext in a binary-serialized form, using Kryo.
 
 
-## The REST API
+## The REST-ful API
 
 The REST API exposes links for receiving events to trigger state transitions for
 the state machine. The server either responds with `202 Accepted` if an event was accepted,
