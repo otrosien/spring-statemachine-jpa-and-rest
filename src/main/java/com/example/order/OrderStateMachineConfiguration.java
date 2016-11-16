@@ -118,7 +118,6 @@ public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAd
                 .target(OrderState.Completed)
                 .guard(isPaid())
                 .event(OrderEvent.Deliver)
-                .action(noopAction())
             .and()
             // (3)
             .withExternal()
@@ -141,21 +140,18 @@ public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAd
                 .source(OrderState.Canceled)
                 .target(OrderState.Open)
                 .event(OrderEvent.Reopen)
-                .action(noopAction())
             .and()
             // (6)
             .withExternal()
                 .source(OrderState.Open)
                 .target(OrderState.Canceled)
                 .event(OrderEvent.Cancel)
-                .action(noopAction())
             .and()
             // (7)
             .withExternal()
                 .source(OrderState.Open)
                 .target(OrderState.ReadyForDelivery)
                 .event(OrderEvent.UnlockDelivery)
-                .action(noopAction())
             .and()
             // (8)
             .withExternal()
@@ -163,7 +159,6 @@ public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAd
                 .target(OrderState.Canceled)
                 .guard(not(isPaid()))
                 .event(OrderEvent.Cancel)
-                .action(noopAction())
             .and()
             // (9)
             .withExternal()
@@ -171,7 +166,6 @@ public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAd
                 .target(OrderState.AwaitingPayment)
                 .guard(not(isPaid()))
                 .event(OrderEvent.Deliver)
-                .action(noopAction())
             .and()
             // (10)
             .withExternal()
@@ -185,7 +179,6 @@ public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAd
                 .source(OrderState.ReadyForDelivery)
                 .event(OrderEvent.ReceivePayment)
                 .action(receivePayment())
-                .action(noopAction())
             .and()
             // (12)
             .withInternal()
@@ -198,10 +191,6 @@ public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAd
 
     public Action<OrderState, OrderEvent> receivePayment() {
         return context -> setPaid(context.getExtendedState());
-    }
-
-    public Action<OrderState, OrderEvent> noopAction() {
-        return context->{};
     }
 
     public Action<OrderState, OrderEvent> refundPayment() {

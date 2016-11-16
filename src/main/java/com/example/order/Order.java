@@ -22,9 +22,9 @@ import lombok.experimental.FieldDefaults;
 
 @Entity
 @NoArgsConstructor
-@FieldDefaults(level=AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Access(AccessType.FIELD)
-@Table(name="orders", indexes=@Index(columnList="currentState"))
+@Table(name = "orders", indexes = @Index(columnList = "currentState"))
 public class Order extends AbstractPersistable<Long> implements ContextEntity<OrderState, OrderEvent, Long> { // NOSONAR
 
     private static final long serialVersionUID = 8848887579564649636L;
