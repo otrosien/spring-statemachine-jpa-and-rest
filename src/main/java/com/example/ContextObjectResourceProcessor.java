@@ -4,32 +4,31 @@ import java.io.Serializable;
 import java.util.function.Predicate;
 
 import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.Identifiable;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.transition.Transition;
 
-import com.example.order.OrderState;
 import com.example.order.OrderEvent;
+import com.example.order.OrderState;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ContextObjectResourceProcessor<S, E> implements ResourceProcessor<Resource<ContextObject<S, E>>> {
+public class ContextObjectResourceProcessor<S, E, T extends ContextEntity<S, E, ? extends Serializable>> implements ResourceProcessor<Resource<T>> {
 
     private static final KebabCaseStrategy TO_KEBAB = new KebabCaseStrategy();
 
     final EntityLinks entityLinks;
 
-    final DefaultStateMachineAdapter<S, E, ContextObject<S, E>> stateMachineAdapter;
+    final DefaultStateMachineAdapter<S, E, ContextEntity<S, E, ? extends Serializable>> stateMachineAdapter;
 
     @Override
-    public Resource<ContextObject<S, E>> process(Resource<ContextObject<S, E>> resource) {
-        ContextObject<S, E> contextObject = resource.getContent();
+    public Resource<T> process(Resource<T> resource) {
+        ContextEntity<S, E, ? extends Serializable> contextObject = resource.getContent();
         StateMachine<S, E> stateMachine = stateMachineAdapter.restore(contextObject);
 
         for (Transition<S, E> transition : stateMachine.getTransitions()) {
@@ -43,9 +42,8 @@ public class ContextObjectResourceProcessor<S, E> implements ResourceProcessor<R
         return resource;
     }
 
-    private Link eventLink(ContextObject<S, E> contextObject, E event, String rel) {
-        // TODO: Fix this ugly cast!
-        return entityLinks.linkForSingleResource((Identifiable<Serializable>)contextObject).slash("receive").slash(event).withRel(rel);
+    private Link eventLink(ContextEntity<S, E, ? extends Serializable> contextObject, E event, String rel) {
+        return entityLinks.linkForSingleResource(contextObject).slash("receive").slash(event).withRel(rel);
     }
 
     static class PaidPredicate implements Predicate<StateMachine<OrderState, OrderEvent>> {

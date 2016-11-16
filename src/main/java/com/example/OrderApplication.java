@@ -1,5 +1,7 @@
 package com.example;
 
+import java.io.Serializable;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -23,35 +25,37 @@ class OrderApplication {
     }
 
     @Bean
-    public DefaultStateMachineAdapter<OrderState, OrderEvent, ContextObject<OrderState, OrderEvent>> orderStateMachineAdapter(
+    public DefaultStateMachineAdapter<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>> orderStateMachineAdapter(
             StateMachineFactory<OrderState, OrderEvent> stateMachineFactory,
-            StateMachinePersister<OrderState, OrderEvent, ContextObject<OrderState, OrderEvent>> persister) {
+            StateMachinePersister<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>> persister) {
         return new DefaultStateMachineAdapter<>(stateMachineFactory, persister);
     }
 
     @Bean
-    public ContextObjectResourceProcessor<OrderState, OrderEvent> orderResourceProcessor(EntityLinks entityLinks,
-            DefaultStateMachineAdapter<OrderState, OrderEvent, ContextObject<OrderState, OrderEvent>> orderStateMachineAdapter) {
-        return new ContextObjectResourceProcessor<>(entityLinks, orderStateMachineAdapter);
+    public ContextObjectResourceProcessor<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>> orderResourceProcessor(EntityLinks entityLinks,
+            DefaultStateMachineAdapter<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, ? extends Serializable>> orderStateMachineAdapter) {
+                return new ContextObjectResourceProcessor<>(entityLinks, orderStateMachineAdapter);
+        
+//        return new ContextObjectResourceProcessor<>(entityLinks, orderStateMachineAdapter);
     }
 
     @Bean
-    public StateMachinePersister<OrderState, OrderEvent, ContextObject<OrderState, OrderEvent>> persister(
-            StateMachinePersist<OrderState, OrderEvent, ContextObject<OrderState, OrderEvent>> persist) {
+    public StateMachinePersister<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>> persister(
+            StateMachinePersist<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>> persist) {
         return new DefaultStateMachinePersister<>(persist);
     }
 
     @Bean
-    public StateMachinePersist<OrderState, OrderEvent, ContextObject<OrderState, OrderEvent>> persist() {
-        return new StateMachinePersist<OrderState, OrderEvent, ContextObject<OrderState, OrderEvent>>() {
+    public StateMachinePersist<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>> persist() {
+        return new StateMachinePersist<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>>() {
 
             @Override
-            public StateMachineContext<OrderState, OrderEvent> read(ContextObject<OrderState, OrderEvent> order) throws Exception {
+            public StateMachineContext<OrderState, OrderEvent> read(ContextEntity<OrderState, OrderEvent, Serializable> order) throws Exception {
                 return order.getStateMachineContext();
             }
 
             @Override
-            public void write(StateMachineContext<OrderState, OrderEvent> context, ContextObject<OrderState, OrderEvent> order) throws Exception {
+            public void write(StateMachineContext<OrderState, OrderEvent> context, ContextEntity<OrderState, OrderEvent, Serializable> order) throws Exception {
                 order.setStateMachineContext(context);
             }
         };

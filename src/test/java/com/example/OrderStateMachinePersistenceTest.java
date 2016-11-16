@@ -2,6 +2,8 @@ package com.example;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.Serializable;
+
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
@@ -27,7 +29,7 @@ import lombok.SneakyThrows;
 public class OrderStateMachinePersistenceTest {
 
     @Autowired
-    StateMachinePersister<OrderState, OrderEvent, ContextObject<OrderState, OrderEvent>> persister;
+    StateMachinePersister<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, ? extends Serializable>> persister;
 
     @Autowired
     OrderRepository repo;
