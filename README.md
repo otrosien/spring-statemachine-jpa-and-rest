@@ -106,6 +106,15 @@ about [DDD and REST](https://spring.io/blog/2016/11/15/springone-platform-2016-r
 }
 ```
 
+## User guides
+
+Further information can be found by the documentation guides generated from the latest master build.
+
+[API guide](https://otrosien.github.io/spring-statemachine-jpa-and-rest/html5/api-guide.html)
+[Getting started](https://otrosien.github.io/spring-statemachine-jpa-and-rest/html5/getting-started-guide.html)
+
+
+
 ### Order-specfic components
 
 - *Order* : My entity acting as context object
