@@ -76,9 +76,11 @@ or `422 Unprocessable Entity` if the event was not accepted by the state machine
 
 ### Current State and Links
 
-The resource intentionally does not expose its current state, but instead links for triggering
-the state transitions that are possible for the given state. You can get more details
-about why you should expose links instead of status properties in Oliver Gierke's talk
+The resource intentionally does not expose its current state as enum, but as a localized text, so that clients
+are aware of the fact they should not build business logic upon that.
+Instead the client should use the links for triggering the state transitions that are possible for 
+the given state. You can get more details about why you should expose links instead of status 
+properties in Oliver Gierke's talk
 about [DDD and REST](https://spring.io/blog/2016/11/15/springone-platform-2016-replay-ddd-rest-domain-driven-apis-for-the-web).
 
 
