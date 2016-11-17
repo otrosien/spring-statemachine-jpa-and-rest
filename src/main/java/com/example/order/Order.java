@@ -34,7 +34,6 @@ public class Order extends AbstractPersistable<Long> implements ContextEntity<Or
     StateMachineContext<OrderState, OrderEvent> stateMachineContext; // NOSONAR
 
     @Getter
-    @JsonIgnore
     @Enumerated(EnumType.STRING)
     OrderState currentState;
 

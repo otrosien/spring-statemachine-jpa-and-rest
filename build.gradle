@@ -10,10 +10,14 @@ buildscript {
     }
 }
 
+plugins {
+    id "org.asciidoctor.convert" version "1.5.3"
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 
 jar {
     baseName = 'spring-statemachine-sample'
@@ -34,6 +38,11 @@ dependencyManagement {
     }
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+ext['spring-restdocs.version'] = '1.2.0.BUILD-SNAPSHOT'
+
 dependencies {
     compile('org.springframework.boot:spring-boot-starter')
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -42,6 +51,10 @@ dependencies {
     runtime('org.springframework.data:spring-data-rest-hal-browser')
     runtime("com.h2database:h2")
     runtime('org.springframework.boot:spring-boot-starter-logging')
+
+    asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:${project.ext['spring-restdocs.version']}"
+    testCompile 'org.springframework.restdocs:spring-restdocs-restassured'
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile 'junit:junit:4.12'
     '1.2.0.M2'.with { springStatemachineVersion ->
@@ -52,5 +65,22 @@ dependencies {
     '1.16.10'.with { lombokVersion ->
         compileOnly("org.projectlombok:lombok:$lombokVersion")
         testCompileOnly("org.projectlombok:lombok:$lombokVersion")
+    }
+}
+
+
+test {
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+jar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
     }
 }
