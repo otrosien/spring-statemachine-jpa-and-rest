@@ -87,7 +87,7 @@ public class ApiDocumentation {
                 .perform(get("/error").requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 400)
                         .requestAttr(RequestDispatcher.ERROR_REQUEST_URI, "/orders").requestAttr(
                                 RequestDispatcher.ERROR_MESSAGE,
-                                "The order 'http://localhost:8080/orders/123' does not exist"))
+                                "The order cannot be created."))
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("error", is("Bad Request")))
                 .andExpect(jsonPath("timestamp", is(notNullValue()))).andExpect(jsonPath("status", is(400)))
                 .andExpect(jsonPath("path", is(notNullValue())))

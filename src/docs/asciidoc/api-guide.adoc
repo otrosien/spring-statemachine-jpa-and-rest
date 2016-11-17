@@ -79,7 +79,7 @@ that describes the problem. The error object has the following structure:
 
 include::{snippets}/error/response-fields.adoc[]
 
-For example, a request that attempts to apply a non-existent tag to a note will produce a
+For example, a request that attempts to create an order with invalid JSON will produce a
 `400 Bad Request` response:
 
 include::{snippets}/error/http-response.adoc[]

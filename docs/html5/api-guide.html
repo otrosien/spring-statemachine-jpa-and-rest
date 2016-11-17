@@ -653,20 +653,20 @@ that describes the problem. The error object has the following structure:</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>For example, a request that attempts to apply a non-existent tag to a note will produce a
+<p>For example, a request that attempts to create an order with invalid JSON will produce a
 <code>400 Bad Request</code> response:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 400 Bad Request
 Content-Type: application/json;charset=UTF-8
-Content-Length: 177
+Content-Length: 146
 
 {
-  "timestamp" : 1479394812720,
+  "timestamp" : 1479395704663,
   "status" : 400,
   "error" : "Bad Request",
-  "message" : "The order 'http://localhost:8080/orders/123' does not exist",
+  "message" : "The order cannot be created.",
   "path" : "/orders"
 }</code></pre>
 </div>
@@ -815,7 +815,7 @@ Content-Length: 206
 <h4 id="_example_request"><a class="link" href="#_example_request">Example request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:37765/orders' -i -H 'Accept: */*'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:46258/orders' -i -H 'Accept: */*'</code></pre>
 </div>
 </div>
 </div>
@@ -826,7 +826,7 @@ Content-Length: 206
 <pre class="highlightjs highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
 Transfer-Encoding: chunked
-Date: Thu, 17 Nov 2016 15:00:09 GMT
+Date: Thu, 17 Nov 2016 15:15:02 GMT
 Content-Length: 1409
 
 {
@@ -835,48 +835,48 @@ Content-Length: 1409
       "currentState" : "Canceled",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:37765/orders/2"
+          "href" : "http://localhost:46258/orders/2"
         },
         "order" : {
-          "href" : "http://localhost:37765/orders/2"
+          "href" : "http://localhost:46258/orders/2"
         },
         "reopen" : {
-          "href" : "http://localhost:37765/orders/2/receive/Reopen"
+          "href" : "http://localhost:46258/orders/2/receive/Reopen"
         },
         "receive-payment" : {
-          "href" : "http://localhost:37765/orders/2/receive/ReceivePayment"
+          "href" : "http://localhost:46258/orders/2/receive/ReceivePayment"
         }
       }
     }, {
       "currentState" : "Open",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:37765/orders/3"
+          "href" : "http://localhost:46258/orders/3"
         },
         "order" : {
-          "href" : "http://localhost:37765/orders/3"
+          "href" : "http://localhost:46258/orders/3"
         },
         "receive-payment" : {
-          "href" : "http://localhost:37765/orders/3/receive/ReceivePayment"
+          "href" : "http://localhost:46258/orders/3/receive/ReceivePayment"
         },
         "cancel" : {
-          "href" : "http://localhost:37765/orders/3/receive/Cancel"
+          "href" : "http://localhost:46258/orders/3/receive/Cancel"
         },
         "unlock-delivery" : {
-          "href" : "http://localhost:37765/orders/3/receive/UnlockDelivery"
+          "href" : "http://localhost:46258/orders/3/receive/UnlockDelivery"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:37765/orders"
+      "href" : "http://localhost:46258/orders"
     },
     "profile" : {
-      "href" : "http://localhost:37765/profile/orders"
+      "href" : "http://localhost:46258/profile/orders"
     },
     "search" : {
-      "href" : "http://localhost:37765/orders/search"
+      "href" : "http://localhost:46258/orders/search"
     }
   },
   "page" : {
@@ -916,7 +916,7 @@ Content-Length: 1409
 <h4 id="_example_request_2"><a class="link" href="#_example_request_2">Example request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:37765/orders' -i -X POST -H 'Accept: application/hal+json' -H 'Content-Type: application/json; charset=UTF-8' -d '{}'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:46258/orders' -i -X POST -H 'Accept: application/hal+json' -H 'Content-Type: application/json; charset=UTF-8' -d '{}'</code></pre>
 </div>
 </div>
 </div>
@@ -925,29 +925,29 @@ Content-Length: 1409
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 201 Created
-Location: http://localhost:37765/orders/3
+Location: http://localhost:46258/orders/3
 Content-Type: application/hal+json;charset=UTF-8
 Transfer-Encoding: chunked
-Date: Thu, 17 Nov 2016 15:00:09 GMT
+Date: Thu, 17 Nov 2016 15:15:01 GMT
 Content-Length: 489
 
 {
   "currentState" : "Open",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:37765/orders/3"
+      "href" : "http://localhost:46258/orders/3"
     },
     "order" : {
-      "href" : "http://localhost:37765/orders/3"
+      "href" : "http://localhost:46258/orders/3"
     },
     "receive-payment" : {
-      "href" : "http://localhost:37765/orders/3/receive/ReceivePayment"
+      "href" : "http://localhost:46258/orders/3/receive/ReceivePayment"
     },
     "cancel" : {
-      "href" : "http://localhost:37765/orders/3/receive/Cancel"
+      "href" : "http://localhost:46258/orders/3/receive/Cancel"
     },
     "unlock-delivery" : {
-      "href" : "http://localhost:37765/orders/3/receive/UnlockDelivery"
+      "href" : "http://localhost:46258/orders/3/receive/UnlockDelivery"
     }
   }
 }</code></pre>
@@ -1038,7 +1038,7 @@ triggering order state transitions.</p>
 <h4 id="_example_request_3"><a class="link" href="#_example_request_3">Example request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:37765/orders/2' -i -H 'Accept: application/hal+json'</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash" data-lang="bash">$ curl 'http://localhost:46258/orders/2' -i -H 'Accept: application/hal+json'</code></pre>
 </div>
 </div>
 </div>
@@ -1049,26 +1049,26 @@ triggering order state transitions.</p>
 <pre class="highlightjs highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
 Transfer-Encoding: chunked
-Date: Thu, 17 Nov 2016 15:00:09 GMT
+Date: Thu, 17 Nov 2016 15:15:01 GMT
 Content-Length: 489
 
 {
   "currentState" : "Open",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:37765/orders/2"
+      "href" : "http://localhost:46258/orders/2"
     },
     "order" : {
-      "href" : "http://localhost:37765/orders/2"
+      "href" : "http://localhost:46258/orders/2"
     },
     "receive-payment" : {
-      "href" : "http://localhost:37765/orders/2/receive/ReceivePayment"
+      "href" : "http://localhost:46258/orders/2/receive/ReceivePayment"
     },
     "cancel" : {
-      "href" : "http://localhost:37765/orders/2/receive/Cancel"
+      "href" : "http://localhost:46258/orders/2/receive/Cancel"
     },
     "unlock-delivery" : {
-      "href" : "http://localhost:37765/orders/2/receive/UnlockDelivery"
+      "href" : "http://localhost:46258/orders/2/receive/UnlockDelivery"
     }
   }
 }</code></pre>
@@ -1081,7 +1081,7 @@ Content-Length: 489
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-11-17 14:03:54 +01:00
+Last updated 2016-11-17 16:14:42 +01:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
