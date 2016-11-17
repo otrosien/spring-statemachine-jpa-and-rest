@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.persist.StateMachinePersister;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.order.Order;
@@ -26,7 +27,8 @@ import lombok.SneakyThrows;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class OrderStateMachinePersistenceTest {
+@ActiveProfiles("test")
+public class OrderStateMachineIntegrationTest {
 
     @Autowired
     StateMachinePersister<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, ? extends Serializable>> persister;

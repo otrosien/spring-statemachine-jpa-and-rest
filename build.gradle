@@ -75,12 +75,13 @@ test {
 
 asciidoctor {
     inputs.dir snippetsDir
+    outputDir "static/docs"
     dependsOn test
 }
 
 jar {
     dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/html5") {
+    from ("static/docs/html5") {
         into 'static/docs'
     }
 }

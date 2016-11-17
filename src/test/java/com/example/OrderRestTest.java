@@ -31,6 +31,7 @@ import org.springframework.hateoas.client.Traverson;
 import org.springframework.http.HttpStatus;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.jayway.restassured.builder.RequestSpecBuilder;
@@ -42,8 +43,8 @@ import lombok.SneakyThrows;
 @RunWith(SpringRunner.class)
 @SpringBootTest(
     classes = { OrderApplication.class }, 
-    webEnvironment = WebEnvironment.RANDOM_PORT, 
-    properties = {"logging.level.org.apache.http.wire=DEBUG" })
+    webEnvironment = WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class OrderRestTest {
 
     private static final Matcher<Integer> ACCEPTED = is(HttpStatus.ACCEPTED.value());
