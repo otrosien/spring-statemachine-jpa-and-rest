@@ -83,9 +83,9 @@ public class ApiDocumentation {
     public void error() throws Exception {
         this.mockMvc
                 .perform(get("/error").requestAttr(RequestDispatcher.ERROR_STATUS_CODE, 400)
-                        .requestAttr(RequestDispatcher.ERROR_REQUEST_URI, "/notes").requestAttr(
+                        .requestAttr(RequestDispatcher.ERROR_REQUEST_URI, "/orders").requestAttr(
                                 RequestDispatcher.ERROR_MESSAGE,
-                                "The tag 'http://localhost:8080/tags/123' does not exist"))
+                                "The order 'http://localhost:8080/orders/123' does not exist"))
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("error", is("Bad Request")))
                 .andExpect(jsonPath("timestamp", is(notNullValue()))).andExpect(jsonPath("status", is(400)))
                 .andExpect(jsonPath("path", is(notNullValue())))
