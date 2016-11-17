@@ -65,7 +65,7 @@ The two flows are shown below.
 ## Persistence
 
 I use a simple domain object as state machine context (my `Order` entity), which holds
-the StateMachineContext in a binary-serialized form, using Kryo.
+the StateMachineContext in a binary-serialized form, using [Kryo](https://github.com/EsotericSoftware/kryo).
 
 
 ## The REST-ful API
@@ -74,7 +74,10 @@ The REST API exposes links for receiving events to trigger state transitions for
 the state machine. The server either responds with `202 Accepted` if an event was accepted,
 or `422 Unprocessable Entity` if the event was not accepted by the state machine.
 The resource intentionally does not expose the current state, but links for triggering
-the state transitions that are possible for the given state.
+the state transitions that are possible for the given state. You can get more details
+about why you should expose links instead of state properties in Oliver Gierke's talk
+about [DDD and REST](https://spring.io/blog/2016/11/15/springone-platform-2016-replay-ddd-rest-domain-driven-apis-for-the-web).
+
 
 
 ```
