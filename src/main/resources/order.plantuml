@@ -4,10 +4,11 @@
 Open -right-> ReadyForDelivery : ReceivePayment
 Open -right-> ReadyForDelivery : UnlockDelivery
 Open --> Canceled : Cancel
-ReadyForDelivery -right-> Completed : Deliver (if paid)
-ReadyForDelivery --> AwaitingPayment : Deliver (if !paid)
-ReadyForDelivery --> Canceled : Refund (if paid)
-ReadyForDelivery --> Canceled : Cancel (if !paid)
+ReadyForDelivery -right-> Completed : [if paid]\nDeliver
+ReadyForDelivery --> AwaitingPayment : [if !paid]\nDeliver
+ReadyForDelivery --> Canceled : [if paid]\nRefund
+ReadyForDelivery --> Canceled : [if !paid]\nCancel
+ReadyForDelivery --> ReadyForDelivery : \nReceivePayment
 AwaitingPayment --> Completed : ReceivePayment
 AwaitingPayment --> Canceled : Cancel
 Completed --> Canceled : Refund
