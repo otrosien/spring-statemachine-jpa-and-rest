@@ -62,6 +62,8 @@ The two flows are shown below.
     +-------------------------------------------------------------------------------------------------------------------------------------------------------------+
 ```
 
+![UML state machine](https://github.com/otrosien/spring-statemachine-jpa-and-rest/raw/master/src/main/resources/order.png)
+
 ## Persistence
 
 I use a simple domain object as state machine context (my `Order` entity), which holds
