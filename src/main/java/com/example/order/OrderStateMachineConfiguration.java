@@ -57,7 +57,7 @@ public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAd
 +----------------------------------------------------------------------------------------------------------------------------+
 |                                                     pre-payment flow                                                       |
 +----------------------------------------------------------------------------------------------------------------------------+
-|                                (1)                            (2) [if paid]                 (3) [if paid]                  |
+|                                (1)                            (2) [if paid]                 (3)                            |
 |     +------------------+ ReceivePayment  +-- ---------------+  Deliver +------------------+  Refund  +------------------+  |
 | *-->|       Open       |---------------->| ReadyForDelivery |--------->|    Completed     |--------->|     Canceled     |  |
 |     |                  |                 |                  |          |                  |          |                  |  |
@@ -81,7 +81,7 @@ public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAd
 +-------------------------------------------------------------------------------------------------------------------------------------------------------------+
 |                                                                     post-payment flow                                                                       |
 +-------------------------------------------------------------------------------------------------------------------------------------------------------------+
-|                                (7)                            (9) [if !paid]                 (10)                            (3) [if paid]                  |
+|                                (7)                            (9) [if !paid]                 (10)                            (3)                            |
 |     +------------------+ UnlockDelivery  +-- ---------------+  Deliver +------------------+ ReceivePayment +---------------+  Refund  +------------------+  |
 | *-->|       Open       |---------------->| ReadyForDelivery |--------->| AwaitingPayment  |--------------->|   Completed   |--------->|     Canceled     |  |
 |     |                  |                 |                  |          |                  |                |               |          |                  |  |
@@ -131,7 +131,6 @@ public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAd
             .withExternal()
                 .source(OrderState.Completed)
                 .target(OrderState.Canceled)
-                .guard(isPaid())
                 .event(OrderEvent.Refund)
                 .action(refundPayment())
             .and()
