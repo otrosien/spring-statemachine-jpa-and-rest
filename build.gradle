@@ -57,7 +57,7 @@ dependencies {
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile 'junit:junit:4.12'
-    '1.2.0.M2'.with { springStatemachineVersion ->
+    '1.2.0.RC1'.with { springStatemachineVersion ->
         compile("org.springframework.statemachine:spring-statemachine-core:$springStatemachineVersion")
         compile("org.springframework.statemachine:spring-statemachine-kryo:$springStatemachineVersion")
         testCompile("org.springframework.statemachine:spring-statemachine-test:$springStatemachineVersion")
