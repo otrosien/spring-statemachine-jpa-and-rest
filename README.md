@@ -1,4 +1,4 @@
-[ ![Build Status](https://travis-ci.org/otrosien/spring-statemachine-jpa.svg)](https://travis-ci.org/otrosien/spring-statemachine-jpa)
+[ ![Build Status](https://travis-ci.org/otrosien/spring-statemachine-jpa-and-rest.svg)](https://travis-ci.org/otrosien/spring-statemachine-jpa-and-rest)
 
 
 # Spring Statemachine using JPA and REST
