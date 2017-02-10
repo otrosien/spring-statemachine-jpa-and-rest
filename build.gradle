@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.4.2.RELEASE'
+        springBootVersion = '1.5.1.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -57,12 +57,12 @@ dependencies {
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile 'junit:junit:4.12'
-    '1.2.0.RC1'.with { springStatemachineVersion ->
+    '1.2.1.RELEASE'.with { springStatemachineVersion ->
         compile("org.springframework.statemachine:spring-statemachine-core:$springStatemachineVersion")
         compile("org.springframework.statemachine:spring-statemachine-kryo:$springStatemachineVersion")
         testCompile("org.springframework.statemachine:spring-statemachine-test:$springStatemachineVersion")
     }
-    '1.16.10'.with { lombokVersion ->
+    '1.16.12'.with { lombokVersion ->
         compileOnly("org.projectlombok:lombok:$lombokVersion")
         testCompileOnly("org.projectlombok:lombok:$lombokVersion")
     }
