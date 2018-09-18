@@ -21,8 +21,8 @@ jar {
     baseName = 'spring-statemachine-sample'
     version = '0.0.1-SNAPSHOT'
 }
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.10
+targetCompatibility = 1.10
 
 repositories {
     mavenCentral()
@@ -46,7 +46,7 @@ dependencies {
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testCompile 'org.springframework.restdocs:spring-restdocs-restassured'
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'junit:junit:4.12'
     '2.0.2.RELEASE'.with { springStatemachineVersion ->
         compile("org.springframework.statemachine:spring-statemachine-core:$springStatemachineVersion")
