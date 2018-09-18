@@ -42,7 +42,7 @@ import lombok.SneakyThrows;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
-    classes = { OrderApplication.class }, 
+    classes = { OrderApplication.class },
     webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class OrderRestTest {
@@ -182,7 +182,9 @@ public class OrderRestTest {
 
     private void postToLink(Link eventLink, Matcher<Integer> statusCodeMatcher) {
         given(this.documentationSpec)
+                .filter(document(eventLink.getRel()))
                 .accept("application/hal+json")
+                .contentType("application/json")
         .when()
             .post(eventLink.getHref())
         .then()

@@ -40,7 +40,7 @@ public class OrderStateMachineConfiguration extends EnumStateMachineConfigurerAd
     }
 
     public StateMachineListener<OrderState, OrderEvent> loggingListener() {
-        return new StateMachineListenerAdapter<OrderState, OrderEvent>() {
+        return new StateMachineListenerAdapter<>() {
             @Override
             public void stateChanged(State<OrderState, OrderEvent> from, State<OrderState, OrderEvent> to) {
                 log.info("State changed to {}", to.getId());

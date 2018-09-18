@@ -13,7 +13,7 @@ Oliver Trosien;
 [[overview-http-verbs]]
 == HTTP verbs
 
-RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+Our application tries to adhere as closely as possible to standard HTTP and REST conventions in its
 use of HTTP verbs.
 
 |===
@@ -35,7 +35,7 @@ use of HTTP verbs.
 [[overview-http-status-codes]]
 == HTTP status codes
 
-RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+Our application tries to adhere as closely as possible to standard HTTP and REST conventions in its
 use of HTTP status codes.
 
 |===
@@ -87,15 +87,14 @@ include::{snippets}/error/http-response.adoc[]
 [[overview-hypermedia]]
 == Hypermedia
 
-RESTful Notes uses hypermedia and resources include links to other resources in their
+Our application uses hypermedia and resources include links to other resources in their
 responses. Responses are in http://stateless.co/hal_specification.html[Hypertext Application
-from resource to resource.
 Language (HAL)] format. Links can be found beneath the `_links` key. Users of the API should
 not create URIs themselves, instead they should use the above-described links to navigate
+from resource to resource.
 
 [[resources]]
 = Resources
-
 
 
 [[resources-index]]
@@ -173,7 +172,7 @@ include::{snippets}/orders-create/http-response.adoc[]
 == Order
 
 The Order resource is used to navigate to sub-resources
-triggering order state transitions.
+triggering order change events.
 
 
 [[resources-order-links]]
@@ -200,4 +199,24 @@ include::{snippets}/order-get/curl-request.adoc[]
 
 include::{snippets}/order-get/http-response.adoc[]
 
+
+[[resources-order-events]]
+=== Triggering order change events
+
+A `POST` request to one of the order event sub-resources will trigger a change event for an order.
+The order resource will only expose links to event sub-resources that are expected to be valid, and
+the state machine will only process certain events in certain states (see statemachine diagram).
+
+==== Response structure
+
+The response code will be either be `202 Accepted` or `422 Unprocessable Entity`, while the response body will always
+be empty.
+
+==== Example request
+
+include::{snippets}/receive-payment/curl-request.adoc[]
+
+==== Example response
+
+include::{snippets}/receive-payment/http-response.adoc[]
 

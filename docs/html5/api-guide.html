@@ -491,6 +491,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_example_response_4">Example response</a></li>
 </ul>
 </li>
+<li><a href="#resources-order-events">Triggering order change events</a>
+<ul class="sectlevel3">
+<li><a href="#_response_structure_4">Response structure</a></li>
+<li><a href="#_example_request_4">Example request</a></li>
+<li><a href="#_example_response_5">Example response</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -504,7 +511,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="overview-http-verbs"><a class="link" href="#overview-http-verbs">HTTP verbs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+<p>Our application tries to adhere as closely as possible to standard HTTP and REST conventions in its
 use of HTTP verbs.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -543,7 +550,7 @@ use of HTTP verbs.</p>
 <h2 id="overview-http-status-codes"><a class="link" href="#overview-http-status-codes">HTTP status codes</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+<p>Our application tries to adhere as closely as possible to standard HTTP and REST conventions in its
 use of HTTP status codes.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -676,7 +683,7 @@ Content-Type: application/json;charset=UTF-8
 Content-Length: 163
 
 {
-  "timestamp" : "2018-09-18T14:50:49.467+0000",
+  "timestamp" : "2018-09-18T16:27:48.889+0000",
   "status" : 400,
   "error" : "Bad Request",
   "message" : "The order cannot be created.",
@@ -690,11 +697,11 @@ Content-Length: 163
 <h2 id="overview-hypermedia"><a class="link" href="#overview-hypermedia">Hypermedia</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>RESTful Notes uses hypermedia and resources include links to other resources in their
+<p>Our application uses hypermedia and resources include links to other resources in their
 responses. Responses are in <a href="http://stateless.co/hal_specification.html">Hypertext Application
-from resource to resource.
 Language (HAL)</a> format. Links can be found beneath the <code>_links</code> key. Users of the API should
-not create URIs themselves, instead they should use the above-described links to navigate</p>
+not create URIs themselves, instead they should use the above-described links to navigate
+from resource to resource.</p>
 </div>
 </div>
 </div>
@@ -828,7 +835,7 @@ Content-Length: 206
 <h4 id="_example_request"><a class="link" href="#_example_request">Example request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:55398/orders' -i -X GET</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:57214/orders' -i -X GET</code></pre>
 </div>
 </div>
 </div>
@@ -839,7 +846,7 @@ Content-Length: 206
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
 Transfer-Encoding: chunked
-Date: Tue, 18 Sep 2018 14:50:41 GMT
+Date: Tue, 18 Sep 2018 16:27:54 GMT
 Content-Length: 1452
 
 {
@@ -848,49 +855,49 @@ Content-Length: 1452
       "currentState" : "Canceled",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:55398/orders/2"
+          "href" : "http://localhost:57214/orders/2"
         },
         "order" : {
-          "href" : "http://localhost:55398/orders/2"
+          "href" : "http://localhost:57214/orders/2"
         },
         "reopen" : {
-          "href" : "http://localhost:55398/orders/2/receive/Reopen"
+          "href" : "http://localhost:57214/orders/2/receive/Reopen"
         },
         "receive-payment" : {
-          "href" : "http://localhost:55398/orders/2/receive/ReceivePayment"
+          "href" : "http://localhost:57214/orders/2/receive/ReceivePayment"
         }
       }
     }, {
       "currentState" : "Open",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:55398/orders/3"
+          "href" : "http://localhost:57214/orders/3"
         },
         "order" : {
-          "href" : "http://localhost:55398/orders/3"
+          "href" : "http://localhost:57214/orders/3"
         },
         "receive-payment" : {
-          "href" : "http://localhost:55398/orders/3/receive/ReceivePayment"
+          "href" : "http://localhost:57214/orders/3/receive/ReceivePayment"
         },
         "cancel" : {
-          "href" : "http://localhost:55398/orders/3/receive/Cancel"
+          "href" : "http://localhost:57214/orders/3/receive/Cancel"
         },
         "unlock-delivery" : {
-          "href" : "http://localhost:55398/orders/3/receive/UnlockDelivery"
+          "href" : "http://localhost:57214/orders/3/receive/UnlockDelivery"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:55398/orders{?page,size,sort}",
+      "href" : "http://localhost:57214/orders{?page,size,sort}",
       "templated" : true
     },
     "profile" : {
-      "href" : "http://localhost:55398/profile/orders"
+      "href" : "http://localhost:57214/profile/orders"
     },
     "search" : {
-      "href" : "http://localhost:55398/orders/search"
+      "href" : "http://localhost:57214/orders/search"
     }
   },
   "page" : {
@@ -930,7 +937,7 @@ Content-Length: 1452
 <h4 id="_example_request_2"><a class="link" href="#_example_request_2">Example request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:55398/orders' -i -X POST \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:57214/orders' -i -X POST \
     -H 'Accept: application/hal+json' \
     -H 'Content-Type: application/json; charset=UTF-8' \
     -d '{}'</code></pre>
@@ -942,29 +949,29 @@ Content-Length: 1452
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 201 Created
-Location: http://localhost:55398/orders/3
+Location: http://localhost:57214/orders/3
 Content-Type: application/hal+json;charset=UTF-8
 Transfer-Encoding: chunked
-Date: Tue, 18 Sep 2018 14:50:40 GMT
+Date: Tue, 18 Sep 2018 16:27:53 GMT
 Content-Length: 489
 
 {
   "currentState" : "Open",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:55398/orders/3"
+      "href" : "http://localhost:57214/orders/3"
     },
     "order" : {
-      "href" : "http://localhost:55398/orders/3"
+      "href" : "http://localhost:57214/orders/3"
     },
     "receive-payment" : {
-      "href" : "http://localhost:55398/orders/3/receive/ReceivePayment"
+      "href" : "http://localhost:57214/orders/3/receive/ReceivePayment"
     },
     "cancel" : {
-      "href" : "http://localhost:55398/orders/3/receive/Cancel"
+      "href" : "http://localhost:57214/orders/3/receive/Cancel"
     },
     "unlock-delivery" : {
-      "href" : "http://localhost:55398/orders/3/receive/UnlockDelivery"
+      "href" : "http://localhost:57214/orders/3/receive/UnlockDelivery"
     }
   }
 }</code></pre>
@@ -979,7 +986,7 @@ Content-Length: 489
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Order resource is used to navigate to sub-resources
-triggering order state transitions.</p>
+triggering order change events.</p>
 </div>
 <div class="sect2">
 <h3 id="resources-order-links"><a class="link" href="#resources-order-links">Links</a></h3>
@@ -1055,7 +1062,7 @@ triggering order state transitions.</p>
 <h4 id="_example_request_3"><a class="link" href="#_example_request_3">Example request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:55398/orders/2' -i -X GET \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:57214/orders/2' -i -X GET \
     -H 'Accept: application/hal+json'</code></pre>
 </div>
 </div>
@@ -1067,29 +1074,63 @@ triggering order state transitions.</p>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/hal+json;charset=UTF-8
 Transfer-Encoding: chunked
-Date: Tue, 18 Sep 2018 14:50:38 GMT
+Date: Tue, 18 Sep 2018 16:27:53 GMT
 Content-Length: 489
 
 {
   "currentState" : "Open",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:55398/orders/2"
+      "href" : "http://localhost:57214/orders/2"
     },
     "order" : {
-      "href" : "http://localhost:55398/orders/2"
+      "href" : "http://localhost:57214/orders/2"
     },
     "receive-payment" : {
-      "href" : "http://localhost:55398/orders/2/receive/ReceivePayment"
+      "href" : "http://localhost:57214/orders/2/receive/ReceivePayment"
     },
     "cancel" : {
-      "href" : "http://localhost:55398/orders/2/receive/Cancel"
+      "href" : "http://localhost:57214/orders/2/receive/Cancel"
     },
     "unlock-delivery" : {
-      "href" : "http://localhost:55398/orders/2/receive/UnlockDelivery"
+      "href" : "http://localhost:57214/orders/2/receive/UnlockDelivery"
     }
   }
 }</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="resources-order-events"><a class="link" href="#resources-order-events">Triggering order change events</a></h3>
+<div class="paragraph">
+<p>A <code>POST</code> request to one of the order event sub-resources will trigger a change event for an order.
+The order resource will only expose links to event sub-resources that are expected to be valid, and
+the state machine will only process certain events in certain states (see statemachine diagram).</p>
+</div>
+<div class="sect3">
+<h4 id="_response_structure_4"><a class="link" href="#_response_structure_4">Response structure</a></h4>
+<div class="paragraph">
+<p>The response code will be either be <code>202 Accepted</code> or <code>422 Unprocessable Entity</code>, while the response body will always
+be empty.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_request_4"><a class="link" href="#_example_request_4">Example request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:57214/orders/2/receive/ReceivePayment' -i -X POST \
+    -H 'Accept: application/hal+json' \
+    -H 'Content-Type: application/json; charset=UTF-8'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_example_response_5"><a class="link" href="#_example_response_5">Example response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 202 Accepted
+Date: Tue, 18 Sep 2018 16:27:53 GMT</code></pre>
 </div>
 </div>
 </div>
@@ -1099,7 +1140,7 @@ Content-Length: 489
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-09-18 16:17:44 CEST
+Last updated 2018-09-18 18:09:13 CEST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">

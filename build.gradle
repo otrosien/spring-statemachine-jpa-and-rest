@@ -47,7 +47,7 @@ dependencies {
     testCompile 'org.springframework.restdocs:spring-restdocs-restassured'
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit'
     '2.0.2.RELEASE'.with { springStatemachineVersion ->
         compile("org.springframework.statemachine:spring-statemachine-core:$springStatemachineVersion")
         compile("org.springframework.statemachine:spring-statemachine-kryo:$springStatemachineVersion")
@@ -59,6 +59,9 @@ dependencies {
     }
 }
 
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
 
 test {
     outputs.dir snippetsDir
@@ -66,6 +69,7 @@ test {
 
 asciidoctor {
     inputs.dir snippetsDir
+    attributes 'snippets': snippetsDir
     outputDir "docs"
     dependsOn test
 }

@@ -46,7 +46,7 @@ class OrderApplication {
 
     @Bean
     public StateMachinePersist<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>> persist() {
-        return new StateMachinePersist<OrderState, OrderEvent, ContextEntity<OrderState, OrderEvent, Serializable>>() {
+        return new StateMachinePersist<>() {
 
             @Override
             public StateMachineContext<OrderState, OrderEvent> read(
