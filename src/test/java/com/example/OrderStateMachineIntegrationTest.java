@@ -70,7 +70,7 @@ public class OrderStateMachineIntegrationTest {
         assertThat(orderStateMachineNew.getState().getId()).isEqualTo(OrderState.ReadyForDelivery);
 
         // and the repository should find one order by its current state.
-        assertThat(repo.findByCurrentState(OrderState.ReadyForDelivery, new PageRequest(0, 10)).getNumberOfElements())
+        assertThat(repo.findByCurrentState(OrderState.ReadyForDelivery, PageRequest.of(0, 10)).getNumberOfElements())
                 .isEqualTo(1);
     }
 
