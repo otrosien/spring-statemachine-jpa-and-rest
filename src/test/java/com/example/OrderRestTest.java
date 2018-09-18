@@ -1,6 +1,6 @@
 package com.example;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
@@ -12,8 +12,8 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
-import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
-import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 
 import java.net.URI;
 
@@ -22,9 +22,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
@@ -34,9 +34,9 @@ import org.springframework.restdocs.operation.preprocess.OperationRequestPreproc
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
 
 import lombok.SneakyThrows;
 
@@ -98,17 +98,17 @@ public class OrderRestTest {
                 ),
                 relaxedLinks(
                     linkWithRel("unlock-delivery")
-                        .description("Unlock delivery, to enable fulfillment process even if payment has not been received yet.").optional(),
+                        .description("POST: Unlock delivery, to enable fulfillment process even if payment has not been received yet.").optional(),
                     linkWithRel("deliver")
-                        .description("Deliver products").optional(),
+                        .description("POST: Deliver products").optional(),
                     linkWithRel("receive-payment")
-                        .description("Receive Payment").optional(),
+                        .description("POST: Receive Payment").optional(),
                     linkWithRel("refund")
-                        .description("Start refund process").optional(),
+                        .description("POST:T Start refund process").optional(),
                     linkWithRel("reopen")
-                        .description("Reopen a closed order").optional(),
+                        .description("POST: Reopen a closed order").optional(),
                     linkWithRel("cancel")
-                        .description("Cancel an order").optional()
+                        .description("POST: Cancel an order").optional()
                 )))
         .when()
             .get(orderLocation)
@@ -135,6 +135,16 @@ public class OrderRestTest {
 
         // refund
         eventLink = new Traverson(orderLocation, MediaTypes.HAL_JSON).follow("refund").asLink();
+        assertThat(eventLink).isNotNull();
+        postToLink(eventLink, ACCEPTED);
+
+        // reopen
+        eventLink = new Traverson(orderLocation, MediaTypes.HAL_JSON).follow("reopen").asLink();
+        assertThat(eventLink).isNotNull();
+        postToLink(eventLink, ACCEPTED);
+
+        // cancel
+        eventLink = new Traverson(orderLocation, MediaTypes.HAL_JSON).follow("cancel").asLink();
         assertThat(eventLink).isNotNull();
         postToLink(eventLink, ACCEPTED);
 
